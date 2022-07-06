@@ -11,6 +11,8 @@ import (
 
 	"github.com/FloatTech/ZeroBot-Plugin/database"
 
+	"github.com/FloatTech/ZeroBot-Plugin/database"
+
 	"github.com/FloatTech/ZeroBot-Plugin/kanban" // 在最前打印 banner
 
 	// ---------以下插件均可通过前面加 // 注释，注释后停用并不加载插件--------- //
@@ -253,6 +255,13 @@ func init() {
 		logrus.Infoln("[main] 配置文件已保存到", *save)
 		os.Exit(0)
 	}
+
+	//mongoConfig := config.DatabaseConfig.Mongo
+	//mongo.InitMongo(mongoConfig.UserName, mongoConfig.Password, mongoConfig.Hostname, mongoConfig.DatabaseConfig, mongoConfig.Port)
+	//println(mongoConfig)
+	//redisConfig := config.DatabaseConfig.Redis
+	//println(redisConfig)
+	//redis.InitRedis(redisConfig.Hostname, redisConfig.Password, redisConfig.Port)
 }
 
 func main() {
