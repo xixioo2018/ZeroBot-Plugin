@@ -9,6 +9,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/FloatTech/ZeroBot-Plugin/database"
+
 	"github.com/FloatTech/ZeroBot-Plugin/kanban" // 在最前打印 banner
 
 	// ---------以下插件均可通过前面加 // 注释，注释后停用并不加载插件--------- //
@@ -139,7 +141,7 @@ import (
 
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/curse" // 骂人
 
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/ai_reply" // 人工智能回复
+	//_ "github.com/FloatTech/ZeroBot-Plugin/plugin/ai_reply" // 人工智能回复
 
 	//                               ^^^^                               //
 	//                          ^^^^^^^^^^^^^^                          //
@@ -154,6 +156,10 @@ import (
 	//                                                                  //
 	// -----------------------以下为内置依赖，勿动------------------------ //
 	"github.com/FloatTech/floatbox/process"
+
+	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/art_of_war" // 纸上谈兵
+	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/farm"       // 农场
+
 	"github.com/sirupsen/logrus"
 	zero "github.com/wdvxdr1123/ZeroBot"
 	"github.com/wdvxdr1123/ZeroBot/driver"
@@ -221,6 +227,7 @@ func init() {
 			config.Z.Driver[i] = w
 		}
 		logrus.Infoln("[main] 从", *runcfg, "读取配置文件")
+		database.DefaultConfig = config.Database
 		return
 	}
 
@@ -245,6 +252,13 @@ func init() {
 		logrus.Infoln("[main] 配置文件已保存到", *save)
 		os.Exit(0)
 	}
+
+	//mongoConfig := config.DatabaseConfig.Mongo
+	//mongo.InitMongo(mongoConfig.UserName, mongoConfig.Password, mongoConfig.Hostname, mongoConfig.DatabaseConfig, mongoConfig.Port)
+	//println(mongoConfig)
+	//redisConfig := config.DatabaseConfig.Redis
+	//println(redisConfig)
+	//redis.InitRedis(redisConfig.Hostname, redisConfig.Password, redisConfig.Port)
 }
 
 func main() {
