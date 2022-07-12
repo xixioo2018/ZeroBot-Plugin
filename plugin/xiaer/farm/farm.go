@@ -81,7 +81,7 @@ func init() {
 		})
 	engine.OnPrefix("偷菜").SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
-			printHelpSteal(ctx)
+			steal(ctx)
 		})
 	engine.OnPrefix("浇水").SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
