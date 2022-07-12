@@ -3,6 +3,11 @@ package seller
 import (
 	"context"
 	"fmt"
+	"math"
+	"math/rand"
+	"strings"
+	"time"
+
 	"github.com/FloatTech/ZeroBot-Plugin/database/mongo"
 	"github.com/FloatTech/ZeroBot-Plugin/database/redis"
 	"github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer"
@@ -11,10 +16,6 @@ import (
 	"github.com/FloatTech/zbputils/ctxext"
 	zero "github.com/wdvxdr1123/ZeroBot"
 	"github.com/wdvxdr1123/ZeroBot/message"
-	"math"
-	"math/rand"
-	"strings"
-	"time"
 
 	logger "github.com/sirupsen/logrus"
 
