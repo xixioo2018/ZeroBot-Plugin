@@ -81,7 +81,7 @@ func init() {
 		})
 	engine.OnPrefix("偷菜").SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
-			printHelpSteal(ctx)
+			steal(ctx)
 		})
 	engine.OnPrefix("浇水").SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
@@ -816,6 +816,7 @@ func steal(ctx *zero.Ctx) {
 
 func GetFirstAt(ctx *zero.Ctx) (bool, int64) {
 	for _, singleMessage := range ctx.Event.Message {
+		fmt.Println(singleMessage)
 		if singleMessage.Type == "at" {
 			fmt.Println(singleMessage.Data["qq"])
 			parseInt, err := strconv.ParseInt(singleMessage.Data["qq"], 10, 64)

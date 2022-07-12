@@ -8,7 +8,7 @@
       "アトリ"
     ],
     "command_prefix": "/",
-    "super_users": [383541400]
+    "super_users": []
   },
   "ws": [
     {
@@ -17,17 +17,6 @@
     }
   ],
   "database":{
-    "mongo": {
-      "username": "bot",
-      "password": "xlxdnr0.",
-      "hostname": "43.142.32.122",
-      "port": 27017,
-      "database": "bot"
-    },
-    "redis": {
-      "password": "xlxdnr0.",
-      "hostname": "43.142.32.122",
-      "port": 6379
-    }
+
   }
 }
