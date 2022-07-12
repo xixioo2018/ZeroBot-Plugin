@@ -2,17 +2,19 @@ package farm
 
 import (
 	"fmt"
-	"github.com/FloatTech/ZeroBot-Plugin/database/redis"
-	ctrl "github.com/FloatTech/zbpctrl"
-	"github.com/FloatTech/zbputils/control"
-	"github.com/FloatTech/zbputils/ctxext"
-	zero "github.com/wdvxdr1123/ZeroBot"
-	"github.com/wdvxdr1123/ZeroBot/message"
 	"math"
 	"math/rand"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/FloatTech/ZeroBot-Plugin/database/redis"
+	"github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer"
+	ctrl "github.com/FloatTech/zbpctrl"
+	"github.com/FloatTech/zbputils/control"
+	"github.com/FloatTech/zbputils/ctxext"
+	zero "github.com/wdvxdr1123/ZeroBot"
+	"github.com/wdvxdr1123/ZeroBot/message"
 
 	logger "github.com/sirupsen/logrus"
 )
@@ -67,11 +69,11 @@ func init() {
 		})
 	engine.OnFullMatch("我的农场").SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
-			printPets(ctx)
+			printSelf(ctx)
 		})
 	engine.OnFullMatch("农场等级").SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
-			printPets(ctx)
+			printLevels(ctx)
 		})
 	engine.OnFullMatch("收菜").SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
@@ -79,7 +81,7 @@ func init() {
 		})
 	engine.OnPrefix("偷菜").SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
-			steal(ctx)
+			printHelpSteal(ctx)
 		})
 	engine.OnPrefix("浇水").SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
@@ -98,10 +100,26 @@ func init() {
 		})
 	engine.OnRegex("^购?买([\\s]+)?(\\p{Han}+)([\\s]+)?(\\d{1,5})?([\\s]+)?$").SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
-			txt := ctx.State["args"].(string)
-			if txt != "" {
-				buy(ctx, txt, 0)
+			regex_matched := ctx.State["regex_matched"].([]string)
+			txt := regex_matched[2]
+			if strings.EqualFold("土地", txt) {
+				buyField(ctx)
+				return
 			}
+			count, err := strconv.Atoi(regex_matched[4])
+			if err != nil {
+				ctx.SendChain(message.Text("ERROR:", err))
+				return
+			}
+			buy(ctx, txt, count)
+		})
+	engine.OnRegex("^播?种植?([\\s]+)?(\\p{Han}+)([\\s]+)?([\\s]+)?$").SetBlock(true).Limit(ctxext.LimitByGroup).
+		Handle(func(ctx *zero.Ctx) {
+			regex_matched := ctx.State["regex_matched"].([]string)
+			fmt.Println(regex_matched)
+			fmt.Println(len(regex_matched), regex_matched[0], regex_matched[2], regex_matched[4])
+			txt := regex_matched[2]
+			plant(ctx, txt)
 		})
 }
 
@@ -642,16 +660,12 @@ func collect(ctx *zero.Ctx) {
 			builder.WriteString("\n")
 			builder.WriteString("偷你菜的群友 : \n")
 			for _, stealer := range stealerSet {
-				builder.WriteString("    " + CardNameInGroup(ctx, stealer) + "\n")
+				builder.WriteString("    " + xiaer.CardNameInGroup(ctx, stealer) + "\n")
 			}
 		}
 		builder.WriteString(fmt.Sprintf("\n%s ↑ %d => %d\n%s ↑ %d => %d", emojiExp, expUp, assets.Exp+expUp, emojiSun, coinsUp, assets.Coins+coinsUp))
 	}
 	ctx.SendChain(message.Text(builder.String()))
-}
-
-func CardNameInGroup(ctx *zero.Ctx, userId int64) string {
-	return ctx.GetGroupMemberInfo(ctx.Event.GroupID, userId, false).Get("nickname").String()
 }
 
 type HarvestMessage struct {

@@ -1,0 +1,33 @@
+{
+  "zero": {
+    "nickname": [
+      "椛椛",
+      "ATRI",
+      "atri",
+      "亚托莉",
+      "アトリ"
+    ],
+    "command_prefix": "/",
+    "super_users": [383541400]
+  },
+  "ws": [
+    {
+      "Url": "ws://127.0.0.1:8080",
+      "AccessToken": ""
+    }
+  ],
+  "database":{
+    "mongo": {
+      "username": "bot",
+      "password": "xlxdnr0.",
+      "hostname": "43.142.32.122",
+      "port": 27017,
+      "database": "bot"
+    },
+    "redis": {
+      "password": "xlxdnr0.",
+      "hostname": "43.142.32.122",
+      "port": 6379
+    }
+  }
+}

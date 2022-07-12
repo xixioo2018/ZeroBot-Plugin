@@ -159,6 +159,7 @@ import (
 
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/art_of_war" // 纸上谈兵
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/farm"       // 农场
+	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/seller"     // 好友买卖
 
 	"github.com/sirupsen/logrus"
 	zero "github.com/wdvxdr1123/ZeroBot"
@@ -252,13 +253,6 @@ func init() {
 		logrus.Infoln("[main] 配置文件已保存到", *save)
 		os.Exit(0)
 	}
-
-	//mongoConfig := config.DatabaseConfig.Mongo
-	//mongo.InitMongo(mongoConfig.UserName, mongoConfig.Password, mongoConfig.Hostname, mongoConfig.DatabaseConfig, mongoConfig.Port)
-	//println(mongoConfig)
-	//redisConfig := config.DatabaseConfig.Redis
-	//println(redisConfig)
-	//redis.InitRedis(redisConfig.Hostname, redisConfig.Password, redisConfig.Port)
 }
 
 func main() {

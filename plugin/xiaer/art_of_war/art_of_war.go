@@ -68,8 +68,7 @@ type LogMessage struct {
 	Content string
 }
 
-func addArtOfWar(content string) string {
-	search := content[10:]
+func addArtOfWar(search string) string {
 	fmt.Println(search)
 	if len(search) <= 2 {
 		return "请输入要添加的数据"
@@ -89,8 +88,7 @@ func addArtOfWar(content string) string {
 	}
 }
 
-func searchArtOfWar(content string) string {
-	search := content[9:]
+func searchArtOfWar(search string) string {
 	fmt.Println(search)
 	if len(search) < 2 {
 		return "请输入题目"
