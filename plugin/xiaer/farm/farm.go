@@ -108,8 +108,12 @@ func init() {
 			}
 			count, err := strconv.Atoi(regex_matched[4])
 			if err != nil {
-				ctx.SendChain(message.Text("ERROR:", err))
-				return
+				if regex_matched[4] == "" {
+					count = 1
+				} else {
+					ctx.SendChain(message.Text("ERROR:", err))
+					return
+				}
 			}
 			buy(ctx, txt, count)
 		})
