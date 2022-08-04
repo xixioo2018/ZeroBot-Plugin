@@ -312,7 +312,7 @@ func operateSlaves(ctx *zero.Ctx, content string) {
 
 func buySlaves(ctx *zero.Ctx) {
 	has, at := xiaer.GetFirstAt(ctx)
-	if has || at == 0 {
+	if !has || at == 0 {
 		ctx.SendChain(message.Text("您需要发送 购买打工仔并@一个人 才能购买他人作为打工仔"))
 		return
 	}
