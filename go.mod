@@ -31,12 +31,10 @@ require (
 	github.com/wcharczuk/go-chart/v2 v2.1.0
 	github.com/wdvxdr1123/ZeroBot v1.5.2-0.20220715040337-ef4327320c40
 	gitlab.com/gomidi/midi/v2 v2.0.17
-	golang.org/x/image v0.0.0-20220601225756-64ec528b34cd
-	honnef.co/go/tools v0.0.0-20190106161140-3f1c8253044a
+	golang.org/x/image v0.0.0-20220722155232-062f8c9fd539
 )
 
 require (
-	github.com/BurntSushi/toml v0.3.1 // indirect
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
