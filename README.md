@@ -250,7 +250,7 @@ zerobot [-c config.json] [-h] [-s config.json] [-t token] [-u url] [-n nickname]
 
   - [x] 取消以"完全匹配关键词"触发的(代表我执行的)指令
 
-  - [x] 记录在"cron"触发的指令
+  - [x] 记录在"cron"触发的(别名xxx的)指令
 
   - [x] 取消在"cron"触发的指令
 
@@ -534,13 +534,25 @@ print("run[CQ:image,file="+j["img"]+"]")
 
   `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/qqwife"`
 
+  - 引入好感度系统，好感度越高，自由恋爱成功率越高
+  
+  - [x] 设置CD为xx小时
+
+  - [x] 允许/禁止自由恋爱
+
+  - [x] 允许/禁止牛头人
+
   - [x] 娶群友
 
   - [x] (娶|嫁)[@对方QQ]
   
   - [x] 当[对方Q号|@对方QQ]的小三
 
+  - [x] 做媒 @攻方QQ @受方QQ
+
   - [x] 群老婆列表
+
+  - [x] 重置花名册
 
 </details>
 <details>
