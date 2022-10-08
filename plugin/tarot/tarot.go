@@ -3,7 +3,6 @@ package tarot
 
 import (
 	"encoding/json"
-	"fmt"
 	"math/rand"
 	"strconv"
 	"strings"
@@ -71,7 +70,6 @@ func init() {
 			infoMap[card.Name] = card.cardInfo
 		}
 		for i := 0; i < 22; i++ {
-			// 噢天哪，我应该把json里面序号设成int
 			majorArcanaName = append(majorArcanaName, cardMap[strconv.Itoa(i)].Name)
 		}
 		logrus.Infof("[tarot]读取%d张塔罗牌", len(cardMap))
@@ -95,9 +93,9 @@ func init() {
 		match := ctx.State["regex_matched"].([]string)[1]
 		cardType := ctx.State["regex_matched"].([]string)[2]
 		n := 1
-		reasons := [...]string{"您抽到的是~\n『", "锵锵锵，塔罗牌的预言是~\n『", "诶，让我看看您抽到了~\n『"}
-		position := [...]string{"正位", "逆位"}
-		reverse := [...]string{"", "Reverse"}
+		reasons := [...]string{"您抽到的是~\n", "锵锵锵，塔罗牌的预言是~\n", "诶，让我看看您抽到了~\n"}
+		position := [...]string{"『正位』", "『逆位』"}
+		reverse := [...]string{"", "Reverse/"}
 		start := 0
 		length := 22
 		if match != "" {
@@ -129,14 +127,19 @@ func init() {
 			p := rand.Intn(2)
 			card := cardMap[strconv.Itoa(i)]
 			name := card.Name
+			description := card.Description
+			if p == 1 {
+				description = card.ReverseDescription
+			}
 			if id := ctx.SendChain(
-				message.Text(reasons[rand.Intn(len(reasons))], position[p], "』的『", name, "』\n"),
-				message.Image(fmt.Sprintf("%s/%s/%s", bed, reverse[p], card.ImgURL))); id.ID() == 0 {
+				message.Text(reasons[rand.Intn(len(reasons))], position[p], "的『", name, "』\n"),
+				message.Image(bed+reverse[p]+card.ImgURL),
+				message.Text("\n其释义为: ", description)); id.ID() == 0 {
 				ctx.SendChain(message.Text("ERROR: 可能被风控了"))
 			}
 			return
 		}
-		msg := make([]message.MessageSegment, n)
+		msg := make(message.Message, n)
 		randomIntMap := make(map[int]int, 30)
 		for i := range msg {
 			j := rand.Intn(length)
@@ -149,12 +152,17 @@ func init() {
 			p := rand.Intn(2)
 			card := cardMap[strconv.Itoa(j+start)]
 			name := card.Name
-			tarotMsg := []message.MessageSegment{
-				message.Text(reasons[rand.Intn(len(reasons))], position[p], "』的『", name, "』\n"),
-				message.Image(fmt.Sprintf("%s/%s/%s", bed, reverse[p], card.ImgURL))}
+			description := card.Description
+			if p == 1 {
+				description = card.ReverseDescription
+			}
+			tarotMsg := message.Message{
+				message.Text(position[p], "的『", name, "』\n"),
+				message.Image(bed + reverse[p] + card.ImgURL),
+				message.Text("\n其释义为: ", description)}
 			msg[i] = ctxext.FakeSenderForwardNode(ctx, tarotMsg...)
 		}
-		ctx.SendGroupForwardMessage(ctx.Event.GroupID, msg)
+		ctx.Send(msg)
 	})
 
 	engine.OnRegex(`^解塔罗牌\s?(.*)`, getTarot).SetBlock(true).Limit(ctxext.LimitByGroup).Handle(func(ctx *zero.Ctx) {
@@ -164,8 +172,8 @@ func init() {
 			ctx.SendChain(
 				message.Image(bed+info.ImgURL),
 				message.Text("\n", match, "的含义是~"),
-				message.Text("\n正位:", info.Description),
-				message.Text("\n逆位:", info.ReverseDescription))
+				message.Text("\n『正位』:", info.Description),
+				message.Text("\n『逆位』:", info.ReverseDescription))
 		} else {
 			var build strings.Builder
 			build.WriteString("塔罗牌列表\n大阿尔卡纳:\n")
@@ -188,8 +196,8 @@ func init() {
 		cardType := ctx.State["regex_matched"].([]string)[1]
 		match := ctx.State["regex_matched"].([]string)[5]
 		info, ok := formationMap[match]
-		position := [...]string{"正位", "逆位"}
-		reverse := [...]string{"", "Reverse"}
+		position := [...]string{"『正位』", "『逆位』"}
+		reverse := [...]string{"", "Reverse/"}
 		start, length := 0, 22
 		if strings.Contains(cardType, "小") {
 			start = 22
@@ -205,7 +213,7 @@ func init() {
 			build.WriteString("---")
 			build.WriteString(match)
 			build.WriteString("\n")
-			msg := make([]message.MessageSegment, info.CardsNum+1)
+			msg := make(message.Message, info.CardsNum+1)
 			randomIntMap := make(map[int]int, 30)
 			for i := 0; i < info.CardsNum; i++ {
 				j := rand.Intn(length)
@@ -222,11 +230,11 @@ func init() {
 				if p == 1 {
 					description = card.ReverseDescription
 				}
-				tarotMsg := []message.MessageSegment{message.Image(fmt.Sprintf("%s/%s/%s", bed, reverse[p], card.ImgURL))}
+				tarotMsg := message.Message{message.Image(bed + reverse[p] + card.ImgURL)}
 				build.WriteString(info.Represent[0][i])
-				build.WriteString(":『")
+				build.WriteString(":")
 				build.WriteString(position[p])
-				build.WriteString("』的『")
+				build.WriteString("的『")
 				build.WriteString(name)
 				build.WriteString("』\n其释义为: \n")
 				build.WriteString(description)
@@ -239,8 +247,8 @@ func init() {
 				ctx.SendChain(message.Text("ERROR: ", err))
 				return
 			}
-			msg[info.CardsNum] = ctxext.FakeSenderForwardNode(ctx, []message.MessageSegment{message.Image("base64://" + binary.BytesToString(formation))}...)
-			ctx.SendGroupForwardMessage(ctx.Event.GroupID, msg)
+			msg[info.CardsNum] = ctxext.FakeSenderForwardNode(ctx, message.Message{message.Image("base64://" + binary.BytesToString(formation))}...)
+			ctx.Send(msg)
 		} else {
 			ctx.SendChain(message.Text("没有找到", match, "噢~\n现有牌阵列表: \n", strings.Join(formationName, "\n")))
 		}

@@ -69,7 +69,7 @@ func (gdb *ymgaldb) insertOrUpdateYmgalByID(id int64, title, pictureType, pictur
 			err = db.Model(&ymgal{}).Create(&y).Error // newUser not user
 		}
 	} else {
-		err = db.Model(&ymgal{}).Where("id = ? ", id).Update(map[string]interface{}{
+		err = db.Model(&ymgal{}).Where("id = ? ", id).Update(map[string]any{
 			"title":               title,
 			"picture_type":        pictureType,
 			"picture_description": pictureDescription,
@@ -108,7 +108,7 @@ func (gdb *ymgaldb) getYmgalByKey(pictureType, key string) (y ymgal) {
 }
 
 const (
-	webURL       = "https://www.ymgal.com"
+	webURL       = "https://www.ymgal.games"
 	cgType       = "Gal CG"
 	emoticonType = "其他"
 	webPicURL    = webURL + "/co/picset/"
