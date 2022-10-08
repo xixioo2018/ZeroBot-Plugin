@@ -250,7 +250,7 @@ zerobot [-c config.json] [-h] [-s config.json] [-t token] [-u url] [-n nickname]
 
   - [x] 取消以"完全匹配关键词"触发的(代表我执行的)指令
 
-  - [x] 记录在"cron"触发的指令
+  - [x] 记录在"cron"触发的(别名xxx的)指令
 
   - [x] 取消在"cron"触发的指令
 
@@ -329,7 +329,14 @@ print("run[CQ:image,file="+j["img"]+"]")
 </details>
 
 ### *中优先级*
+<details>
+  <summary>ahsai tts</summary>
 
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/ahsai"`
+
+  - [x] 使[ 伊織弓鶴 | 紲星あかり | 結月ゆかり | 京町セイカ |東北きりたん | 東北イタコ | ついなちゃん標準語 | ついなちゃん関西弁 | 音街ウナ | 琴葉茜 | 吉田くん | 民安ともえ | 桜乃そら | 月読アイ | 琴葉葵 | 東北ずん子 | 月読ショウタ | 水奈瀬コウ ]说(日语)
+
+</details>
 <details>
   <summary>AIfalse</summary>
 
@@ -371,6 +378,34 @@ print("run[CQ:image,file="+j["img"]+"]")
 
 </details>
 <details>
+  <summary>base64卦加解密</summary>
+
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/base64gua"`
+
+  - [x] 六十四卦加密xxx
+
+  - [x] 六十四卦解密xxx
+
+  - [x] 六十四卦用yyy加密xxx
+
+  - [x] 六十四卦用yyy解密xxx
+
+</details>
+<details>
+  <summary>base天城文加解密</summary>
+
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/baseamasiro"`
+
+  - [x] 天城文加密xxx
+
+  - [x] 天城文解密xxx
+
+  - [x] 天城文用yyy加密xxx
+
+  - [x] 天城文用yyy解密xxx
+
+</details>
+<details>
   <summary>bilibili</summary>
 
   `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/bilibili"`
@@ -381,8 +416,12 @@ print("run[CQ:image,file="+j["img"]+"]")
 
   - [x] 查成分 [xxx]
 
-  - [x] 设置b站cookie SESSDATA=82da790d,1663822823,06ecf\*31
+  - [x] 查弹幕 [xxx] 2 (最后一个参数是页码)
 
+  - [x] 设置b站cookie SESSDATA=82da790d,1663822823,06ecf\*31 (最好把cookie设全)
+
+    获取Cookie可以使用[这个工具](https://github.com/XiaoMiku01/login_bili_go)
+    
   - [x] 更新vup
 
 </details>
@@ -423,6 +462,14 @@ print("run[CQ:image,file="+j["img"]+"]")
 
 </details>
 <details>
+  <summary>打断复读</summary>
+
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/breakrepeat"`
+
+  - [x] (打断三次以上的复读)
+
+</details>
+<details>
   <summary>藏头诗</summary>
 
   `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/cangtoushi"`
@@ -430,14 +477,6 @@ print("run[CQ:image,file="+j["img"]+"]")
   - [x] 藏头诗[xxx]
 
   - [x] 藏尾诗[xxx]
-
-</details>
-<details>
-  <summary>英文字符翻转</summary>
-
-  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/char_reverser"`
-
-  - [x] 翻转 [英文字符串]
 
 </details>
 <details>
@@ -454,6 +493,14 @@ print("run[CQ:image,file="+j["img"]+"]")
   `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/chouxianghua"`
 
   - [x] 抽象翻译[xxx]
+
+</details>
+<details>
+  <summary>英文字符翻转</summary>
+
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/chrev"`
+
+  - [x] 翻转 I love you
 
 </details>
 <details>
@@ -493,8 +540,6 @@ print("run[CQ:image,file="+j["img"]+"]")
 
   - [x] 教你一篇小作文[作文]
 
-  - [x] [回复]查重
-
 </details>
 <details>
   <summary>漂流瓶</summary>
@@ -517,13 +562,25 @@ print("run[CQ:image,file="+j["img"]+"]")
 
   `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/qqwife"`
 
+  - 引入好感度系统，好感度越高，自由恋爱成功率越高
+  
+  - [x] 设置CD为xx小时
+
+  - [x] 允许/禁止自由恋爱
+
+  - [x] 允许/禁止牛头人
+
   - [x] 娶群友
 
   - [x] (娶|嫁)[@对方QQ]
   
   - [x] 当[对方Q号|@对方QQ]的小三
 
+  - [x] 做媒 @攻方QQ @受方QQ
+
   - [x] 群老婆列表
+
+  - [x] 重置花名册
 
 </details>
 <details>
@@ -540,6 +597,18 @@ print("run[CQ:image,file="+j["img"]+"]")
   `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/epidemic"`
 
   - [x] xxx疫情
+
+</details>
+<details>
+  <summary>好友申请及群聊邀请事件处理</summary>
+
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/event"`
+
+  - [x] [开启|关闭]自动同意[申请|邀请|主人]
+
+  - [x] [同意|拒绝][申请|邀请][flag]
+
+  - flag跟随事件一起发送, 默认同意主人的事件
 
 </details>
 <details>
@@ -684,6 +753,14 @@ print("run[CQ:image,file="+j["img"]+"]")
 
 </details>
 <details>
+  <summary>小鸡词典</summary>
+
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/jikipedia"`
+
+  - [x] [查梗|小鸡词典][梗]
+
+</details>
+<details>
   <summary>绝绝子</summary>
 
   `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/juejuezi"`
@@ -696,7 +773,9 @@ print("run[CQ:image,file="+j["img"]+"]")
 
   `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/lolicon"`
 
-  - [x] 来份萝莉
+  - [x] 随机图片
+
+  - [x] 随机图片 萝莉|少女
 
   - [x] 设置随机图片地址[http...]
 
@@ -876,11 +955,11 @@ print("run[CQ:image,file="+j["img"]+"]")
 
   `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/runcode"`
 
-  - [x] > runcode [language] help
+  - [x] >runcode [language] help
 
-  - [x] > runcode [language] [code block]
+  - [x] >runcode [language] [code block]
 
-  - [x] > runcoderaw [language] [code block]
+  - [x] >runcoderaw [language] [code block]
 
 </details>
 <details>
@@ -891,6 +970,8 @@ print("run[CQ:image,file="+j["img"]+"]")
   - [x] 以图搜图 | 搜索图片 | 以图识图[图片]
 
   - [x] 搜图[P站图片ID]
+
+  - [x] 设置 saucenao api key [apikey]
 
 </details>
 <details>

@@ -179,8 +179,9 @@ import (
 )
 
 type zbpcfg struct {
-	Z zero.Config        `json:"zero"`
-	W []*driver.WSClient `json:"ws"`
+	Z        zero.Config        `json:"zero"`
+	W        []*driver.WSClient `json:"ws"`
+	Database database.Config    `json:"database"`
 }
 
 var config zbpcfg
