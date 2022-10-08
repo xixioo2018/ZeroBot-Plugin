@@ -8,13 +8,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/FloatTech/ZeroBot-Plugin/database/redis"
-	"github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer"
 	ctrl "github.com/FloatTech/zbpctrl"
 	"github.com/FloatTech/zbputils/control"
 	"github.com/FloatTech/zbputils/ctxext"
 	zero "github.com/wdvxdr1123/ZeroBot"
 	"github.com/wdvxdr1123/ZeroBot/message"
+
+	"github.com/FloatTech/ZeroBot-Plugin/database/redis"
+	"github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer"
 
 	logger "github.com/sirupsen/logrus"
 )
@@ -29,7 +30,8 @@ func init() {
 			"- 武器商店 查询守卫\n" +
 			"- 种植 收菜 偷菜 浇水\n" +
 			"- 我的农场 农场等级\n" +
-			"- 购买土地 农场排行\n",
+			"- 购买土地 农场排行\n" +
+			"- 一键操作",
 	})
 	engine.OnFullMatch("农场").SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
@@ -90,6 +92,10 @@ func init() {
 	engine.OnFullMatch("购买土地").SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
 			buyField(ctx)
+		})
+	engine.OnFullMatch("一键操作").SetBlock(true).Limit(ctxext.LimitByGroup).
+		Handle(func(ctx *zero.Ctx) {
+			oneKeyOperation(ctx)
 		})
 	engine.OnRegex("^查询([\\s]+)?(\\p{Han}+)([\\s]+)?$").SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
@@ -239,6 +245,44 @@ func buyField(ctx *zero.Ctx) {
 	} else {
 		ctx.SendChain(message.Text(fmt.Sprintf("购买第%d块土地需要%s%d", assets.Fields+1, emojiSun, fieldPrice)))
 	}
+}
+
+func oneKeyOperation(ctx *zero.Ctx) {
+	// 收菜
+	collect(ctx)
+	// 购买种子
+	// 加锁
+	assets := assets(sendUser(ctx))
+	level := level(assets.Exp)
+	land := land(sendUser(ctx))
+	buyCount := 0
+
+	for i := 0; i < assets.Fields; i++ {
+		// builder.WriteString(fmt.Sprintf("地(%d) ", i+1))
+		field, _ := land.Fields[strconv.Itoa(i)]
+		if field.Level <= 0 {
+			buyCount++
+		}
+	}
+	var maxCrop = Crop{}
+	for _, crop := range cropList {
+		if crop.Level <= level {
+			if maxCrop.Level == 0 {
+				maxCrop = crop
+			} else if maxCrop.Level < crop.Level {
+				maxCrop = crop
+			}
+		}
+	}
+
+	if buyCount > 0 && maxCrop.Level > 0 {
+		buyCrop(ctx, maxCrop, buyCount)
+		// 种植
+		plantCrop(ctx, maxCrop)
+	}
+
+	// 浇水
+	water(ctx)
 }
 
 func search(ctx *zero.Ctx, name string) bool {
@@ -545,7 +589,7 @@ func collect(ctx *zero.Ctx) {
 	notMatureData := make(map[string]HarvestMessage)
 	noData := make([]int, 0)
 	for i := 0; i < assets.Fields; i++ {
-		//builder.WriteString(fmt.Sprintf("土地(%d) ", i+1))
+		// builder.WriteString(fmt.Sprintf("土地(%d) ", i+1))
 		field, _ := land.Fields[strconv.Itoa(i)]
 		if field.Level > 0 {
 			cropPlanted := cropMap[field.Level]
@@ -564,9 +608,9 @@ func collect(ctx *zero.Ctx) {
 					}
 				}
 				fruitNumber -= len(field.Stealer) * 1
-				//builder.WriteString(fmt.Sprintf("%s (%s %d枚)", emoji, cropPlanted.Name, fruitNumber))
+				// builder.WriteString(fmt.Sprintf("%s (%s %d枚)", emoji, cropPlanted.Name, fruitNumber))
 				if len(field.Stealer) > 0 {
-					//builder.WriteString(fmt.Sprintf("(被偷%d枚)", len(field.Stealer)*1))
+					// builder.WriteString(fmt.Sprintf("(被偷%d枚)", len(field.Stealer)*1))
 					for _, stealer := range field.Stealer {
 						if !ContainsInt64(stealerSet, stealer) {
 							stealerSet = append(stealerSet, stealer)
@@ -604,9 +648,9 @@ func collect(ctx *zero.Ctx) {
 							IsWatered:  true,
 						}
 					}
-					//builder.WriteString(fmt.Sprintf("%s (%s 未成熟)", emoji+emojiWater, cropPlanted.Name))
+					// builder.WriteString(fmt.Sprintf("%s (%s 未成熟)", emoji+emojiWater, cropPlanted.Name))
 				} else {
-					//builder.WriteString(fmt.Sprintf("%s (%s 未成熟)", emoji, cropPlanted.Name))
+					// builder.WriteString(fmt.Sprintf("%s (%s 未成熟)", emoji, cropPlanted.Name))
 					if da, ok := notMatureData[cropPlanted.Name]; ok {
 						da.LandNumber = append(da.LandNumber, i+1)
 						da.Emoji = emoji
@@ -620,13 +664,12 @@ func collect(ctx *zero.Ctx) {
 						}
 					}
 				}
-
 			}
 		} else {
-			//builder.WriteString(fmt.Sprintf("未种植"))
+			// builder.WriteString(fmt.Sprintf("未种植"))
 			noData = append(noData, i+1)
 		}
-		//builder.WriteString("\n")
+		// builder.WriteString("\n")
 	}
 	if len(matureData) > 0 {
 		for cropPlantedName, harvestMessage := range matureData {
@@ -688,7 +731,7 @@ func steal(ctx *zero.Ctx) {
 	}
 	defer lock.Unlock()
 	//
-	//client.MessageFirstAt(groupMessage)
+	// client.MessageFirstAt(groupMessage)
 	firstAt := ctx.Event.Sender.ID
 	if isAt, getFirstAt := GetFirstAt(ctx); isAt {
 		firstAt = getFirstAt
@@ -863,23 +906,23 @@ func water(ctx *zero.Ctx) {
 	successList := make([]int, 0)
 	noneList := make([]int, 0)
 	for i := 0; i < targetAssets.Fields; i++ {
-		//builder.WriteString(fmt.Sprintf("地(%d) ", i+1))
+		// builder.WriteString(fmt.Sprintf("地(%d) ", i+1))
 		field, _ := targetLand.Fields[strconv.Itoa(i)]
 		if field.Level > 0 {
 			cropPlanted := cropMap[field.Level]
 			state, _ := cropState(cropPlanted, field.PlantTime, now)
 			if state == MATURE {
 				matureList = append(matureList, i+1)
-				//builder.WriteString(fmt.Sprintf("%s (%s 成熟)", emoji, cropPlanted.Name))
+				// builder.WriteString(fmt.Sprintf("%s (%s 成熟)", emoji, cropPlanted.Name))
 			} else {
 				if _, ok := field.Watered[strconv.Itoa(state)]; ok {
 					noeNeedList = append(noeNeedList, i+1)
-					//builder.WriteString(fmt.Sprintf("%s (%s 无需)", emoji+emojiWater, cropPlanted.Name))
+					// builder.WriteString(fmt.Sprintf("%s (%s 无需)", emoji+emojiWater, cropPlanted.Name))
 				} else {
 					successList = append(successList, i+1)
 					targetLand.Fields[strconv.Itoa(i)].Watered[strconv.Itoa(state)] = uin
 					expUp += int64(cropPlanted.FruitExp)
-					//builder.WriteString(fmt.Sprintf("%s (%s 成功)", emoji+emojiRain, cropPlanted.Name))
+					// builder.WriteString(fmt.Sprintf("%s (%s 成功)", emoji+emojiRain, cropPlanted.Name))
 				}
 			}
 		} else {
@@ -908,13 +951,13 @@ func water(ctx *zero.Ctx) {
 	ctx.SendChain(message.Text(builder.String()))
 }
 
-//func sendUser(groupMessage *message.GroupMessage) (groupCode int64, uin int64) {
+// func sendUser(groupMessage *message.GroupMessage) (groupCode int64, uin int64) {
 //	return ctx.Event.GroupID, ctx.Event.Sender.ID
 //}
 
 func sendUser(ctx *zero.Ctx) (groupCode int64, uin int64) {
 	return ctx.Event.GroupID, ctx.Event.UserID
-	//return ctx.Event.GroupID, ctx.Event.Sender.ID
+	// return ctx.Event.GroupID, ctx.Event.Sender.ID
 }
 
 func lockUnit(groupCode int64, uin int64) (*redis.Lock, error) {

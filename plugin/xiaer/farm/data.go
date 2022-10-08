@@ -10,7 +10,7 @@ func ContainsInt64(items []int64, item int64) bool {
 }
 
 func ContainsInt(items []int, item int) bool {
-	//return len(items) > 0
+	// return len(items) > 0
 	for _, eachItem := range items {
 		if eachItem == item {
 			return true

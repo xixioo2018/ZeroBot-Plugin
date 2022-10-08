@@ -8,14 +8,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/FloatTech/ZeroBot-Plugin/database/mongo"
-	"github.com/FloatTech/ZeroBot-Plugin/database/redis"
-	"github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer"
 	ctrl "github.com/FloatTech/zbpctrl"
 	"github.com/FloatTech/zbputils/control"
 	"github.com/FloatTech/zbputils/ctxext"
 	zero "github.com/wdvxdr1123/ZeroBot"
 	"github.com/wdvxdr1123/ZeroBot/message"
+
+	"github.com/FloatTech/ZeroBot-Plugin/database/mongo"
+	"github.com/FloatTech/ZeroBot-Plugin/database/redis"
+	"github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer"
 
 	logger "github.com/sirupsen/logrus"
 
@@ -91,7 +92,6 @@ func init() {
 			if txt != "" {
 				operateSlaves(ctx, txt)
 			}
-
 		})
 }
 
@@ -99,7 +99,6 @@ func slaveList(ctx *zero.Ctx) {
 	currentUser := loadUserInfo(ctx.Event.GroupID, ctx.Event.Sender.ID)
 	result := "打工仔列表 : \n"
 	for _, slaverId := range currentUser.Slaver {
-
 		targetNickname := xiaer.CardNameInGroup(ctx, slaverId)
 		result += fmt.Sprintf(" %v \n\n", targetNickname)
 	}
@@ -359,7 +358,7 @@ func buySlaves(ctx *zero.Ctx) {
 	}
 	logger.Info("开始购买")
 	consumption := slaver.Worth + 50
-	seller.Money -= consumption //购买者扣除打工仔身价 + 50金币手续费
+	seller.Money -= consumption // 购买者扣除打工仔身价 + 50金币手续费
 
 	var salaryMoney float64 = 0
 	if slaver.Master > 0 {
@@ -469,7 +468,6 @@ func sellSlaves(ctx *zero.Ctx) {
 
 	if !slaver.WorkStartTime.IsZero() {
 		salaryMoney += slaver.Salary * time.Now().Sub(slaver.WorkStartTime).Hours()
-
 	}
 	seller.Money += salaryMoney
 
@@ -557,19 +555,19 @@ func updateUser(code int64, uin int64, user *User) {
 }
 
 type User struct {
-	GroupCode      int64     //群号
-	Uin            int64     //QQ号
-	LastLoginTime  time.Time //最后登录时间
-	Worth          float64   //身价
-	Count          int       //可购买次数
-	LastBuyTime    time.Time //最后购买时间
-	Money          float64   //金币
-	Master         int64     //MasterId
-	Slaver         []int64   //打工仔Id
-	GuardTime      time.Time //购买保护时间
-	TormentCount   int       //可折磨次数，根据Master
-	WorkStartTime  time.Time //开始工作时间
-	Salary         float64   //薪资
+	GroupCode      int64     // 群号
+	Uin            int64     // QQ号
+	LastLoginTime  time.Time // 最后登录时间
+	Worth          float64   // 身价
+	Count          int       // 可购买次数
+	LastBuyTime    time.Time // 最后购买时间
+	Money          float64   // 金币
+	Master         int64     // MasterId
+	Slaver         []int64   // 打工仔Id
+	GuardTime      time.Time // 购买保护时间
+	TormentCount   int       // 可折磨次数，根据Master
+	WorkStartTime  time.Time // 开始工作时间
+	Salary         float64   // 薪资
 	OperationCount int
 }
 

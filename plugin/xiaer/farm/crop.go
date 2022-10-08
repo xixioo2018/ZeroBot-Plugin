@@ -581,6 +581,139 @@ const cropJson = `
       "\uD83C\uDF33"
     ],
     "fruitEmoji": "🥥"
+  },{
+    "level": 100,
+    "name": "香蕉",
+    "seedPrice": 3199,
+    "fruitsMin": 31,
+    "fruitsMax": 35,
+    "fruitPrice": 1200,
+    "fruitExp": 1200,
+    "stepHours": [
+      8,
+      11,
+      14
+    ],
+    "stepEmojis": [
+      "\uD83C\uDF31",
+      "\uD83C\uDF8D",
+      "\uD83C\uDF33"
+    ],
+    "fruitEmoji": "🍌"
+  },{
+    "level": 105,
+    "name": "胡萝卜",
+    "seedPrice": 3299,
+    "fruitsMin": 30,
+    "fruitsMax": 35,
+    "fruitPrice": 1300,
+    "fruitExp": 1300,
+    "stepHours": [
+      8,
+      11,
+      14
+    ],
+    "stepEmojis": [
+      "\uD83C\uDF31",
+      "\uD83C\uDF8D",
+      "\uD83C\uDF33"
+    ],
+    "fruitEmoji": "🥕"
+  },{
+    "level": 110,
+    "name": "黄瓜",
+    "seedPrice": 3399,
+    "fruitsMin": 30,
+    "fruitsMax": 35,
+    "fruitPrice": 1400,
+    "fruitExp": 1400,
+    "stepHours": [
+      8,
+      11,
+      14
+    ],
+    "stepEmojis": [
+      "\uD83C\uDF31",
+      "\uD83C\uDF8D",
+      "\uD83C\uDF33"
+    ],
+    "fruitEmoji": "🥒"
+  },{
+    "level": 115,
+    "name": "白菜",
+    "seedPrice": 3499,
+    "fruitsMin": 30,
+    "fruitsMax": 35,
+    "fruitPrice": 1500,
+    "fruitExp": 1500,
+    "stepHours": [
+      8,
+      11,
+      14
+    ],
+    "stepEmojis": [
+      "\uD83C\uDF31",
+      "\uD83C\uDF8D",
+      "\uD83C\uDF33"
+    ],
+    "fruitEmoji": "🥬"
+  },{
+    "level": 120,
+    "name": "蒜",
+    "seedPrice": 3599,
+    "fruitsMin": 30,
+    "fruitsMax": 35,
+    "fruitPrice": 1600,
+    "fruitExp": 1600,
+    "stepHours": [
+      8,
+      11,
+      14
+    ],
+    "stepEmojis": [
+      "\uD83C\uDF31",
+      "\uD83C\uDF8D",
+      "\uD83C\uDF33"
+    ],
+    "fruitEmoji": "🧄"
+  },{
+    "level": 125,
+    "name": "蒜",
+    "seedPrice": 3699,
+    "fruitsMin": 30,
+    "fruitsMax": 35,
+    "fruitPrice": 1700,
+    "fruitExp": 1700,
+    "stepHours": [
+      8,
+      11,
+      14
+    ],
+    "stepEmojis": [
+      "\uD83C\uDF31",
+      "\uD83C\uDF8D",
+      "\uD83C\uDF33"
+    ],
+    "fruitEmoji": "🧅"
+  },{
+    "level": 130,
+    "name": "栗子",
+    "seedPrice": 3799,
+    "fruitsMin": 30,
+    "fruitsMax": 35,
+    "fruitPrice": 1800,
+    "fruitExp": 1800,
+    "stepHours": [
+      8,
+      11,
+      14
+    ],
+    "stepEmojis": [
+      "\uD83C\uDF31",
+      "\uD83C\uDF8D",
+      "\uD83C\uDF33"
+    ],
+    "fruitEmoji": "🌰"
   }
 ]
 `

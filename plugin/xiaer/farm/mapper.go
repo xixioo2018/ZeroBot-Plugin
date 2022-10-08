@@ -2,9 +2,10 @@ package farm
 
 import (
 	"context"
-	"github.com/FloatTech/ZeroBot-Plugin/database/mongo"
 	"math"
 	"time"
+
+	"github.com/FloatTech/ZeroBot-Plugin/database/mongo"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
