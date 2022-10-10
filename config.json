@@ -19,14 +19,14 @@
   "database": {
     "mongo": {
       "username": "bot",
-      "password": "xlxdnr0.",
-      "hostname": "43.142.32.122",
+      "password": "password",
+      "hostname": "host",
       "port": 27017,
       "database": "bot"
     },
     "redis": {
-      "password": "xlxdnr0.",
-      "hostname": "43.142.32.122",
+      "password": "password",
+      "hostname": "host",
       "port": 6379
     }
   }
