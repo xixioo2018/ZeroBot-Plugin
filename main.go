@@ -167,6 +167,7 @@ import (
 	// -----------------------以下为内置依赖，勿动------------------------ //
 	"github.com/FloatTech/floatbox/process"
 
+	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/aiart"      // ai绘画
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/art_of_war" // 纸上谈兵
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/farm"       // 农场
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/seller"     // 好友买卖

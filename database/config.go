@@ -13,6 +13,10 @@ type Config struct {
 		Hostname string
 		Port     int
 	}
+	Baidu struct {
+		Ak string
+		Sk string
+	}
 }
 
 var DefaultConfig Config
