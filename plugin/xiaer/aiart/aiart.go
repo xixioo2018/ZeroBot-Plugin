@@ -76,6 +76,7 @@ func art(ctx *zero.Ctx, style, text string) {
 		count := 10
 		for {
 			if count <= 0 {
+				ctx.SendChain(message.Text("时间太短画不出来"))
 				break
 			}
 			result, isSuccess, err2 := pollingResult(token, taskId)
