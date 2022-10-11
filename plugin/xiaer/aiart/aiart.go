@@ -85,7 +85,7 @@ func art(ctx *zero.Ctx, style, text string) {
 						err2.Error(),
 					))
 				}
-				time.Sleep(5 * time.Second)
+				time.Sleep(10 * time.Second)
 				count--
 				continue
 			}
