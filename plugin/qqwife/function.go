@@ -609,7 +609,7 @@ func checkcp(ctx *zero.Ctx) bool {
 		ctx.SendChain(message.Text("[qqwife]群状态查询失败\n", err))
 		return false
 	}
-	if ok {
+	if !ok {
 		ctx.SendChain(message.Text("ta现在还是单身哦，快向ta表白吧！"))
 		return false // 重置后也全是单身
 	}
