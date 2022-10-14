@@ -207,8 +207,8 @@ github.com/tklauser/numcpus v0.4.0 h1:E53Dm1HjH1/R2/aoCtXtPgzmElmn51aOkhCFSuZq//
 github.com/tklauser/numcpus v0.4.0/go.mod h1:1+UI3pD8NW14VMwdgJNJ1ESk2UnwhAnz5hMwiKKqXCQ=
 github.com/wcharczuk/go-chart/v2 v2.1.0 h1:tY2slqVQ6bN+yHSnDYwZebLQFkphK4WNrVwnt7CJZ2I=
 github.com/wcharczuk/go-chart/v2 v2.1.0/go.mod h1:yx7MvAVNcP/kN9lKXM/NTce4au4DFN99j6i1OwDclNA=
-github.com/wdvxdr1123/ZeroBot v1.5.2-0.20220917061201-be873b3fa0fb h1:USIo1bqnc1hF+q/meb/OV//rs0xZTK0QU8RINp3gMqM=
-github.com/wdvxdr1123/ZeroBot v1.5.2-0.20220917061201-be873b3fa0fb/go.mod h1:shG/ruauisKaVcov4amrFJtkeDl7nl+Q00IXB2PqFsc=
+github.com/wdvxdr1123/ZeroBot v1.5.2-0.20221011153413-16c9a77ce4f0 h1:IKWX0c7b3URoFDt5ezD6wa0AZIQ0EY0GbPVhYfuzXug=
+github.com/wdvxdr1123/ZeroBot v1.5.2-0.20221011153413-16c9a77ce4f0/go.mod h1:shG/ruauisKaVcov4amrFJtkeDl7nl+Q00IXB2PqFsc=
 github.com/xdg-go/pbkdf2 v1.0.0 h1:Su7DPu48wXMwC3bs7MCNG+z4FhcyEuz5dlvchbq0B0c=
 github.com/xdg-go/pbkdf2 v1.0.0/go.mod h1:jrpuAogTd400dnrH08LKmI/xc1MbPOebTwRqcT5RDeI=
 github.com/xdg-go/scram v1.0.2 h1:akYIkZ28e6A96dkWNJQu3nmCzH3YfwMPQExUYDaRv7w=
@@ -217,8 +217,6 @@ github.com/xdg-go/stringprep v1.0.2 h1:6iq84/ryjjeRmMJwxutI51F2GIPlP5BfTvXHeYjyh
 github.com/xdg-go/stringprep v1.0.2/go.mod h1:8F9zXuvzgwmyT5DUm4GUfZGDdT3W+LCvS6+da4O5kxM=
 github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d h1:splanxYIlg+5LfHAM6xpdFEAYOk8iySO56hMFq6uLyA=
 github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d/go.mod h1:rHwXgn7JulP+udvsHwJoVG1YGAP6VLg4y9I5dyZdqmA=
-github.com/wdvxdr1123/ZeroBot v1.5.2-0.20221011153413-16c9a77ce4f0 h1:IKWX0c7b3URoFDt5ezD6wa0AZIQ0EY0GbPVhYfuzXug=
-github.com/wdvxdr1123/ZeroBot v1.5.2-0.20221011153413-16c9a77ce4f0/go.mod h1:shG/ruauisKaVcov4amrFJtkeDl7nl+Q00IXB2PqFsc=
 github.com/yuin/goldmark v1.2.1/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.3.5/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1Zlc8k=
 github.com/yusufpapurcu/wmi v1.2.2 h1:KBNDSne4vP5mbSWnJbO+51IMOXJB67QiYCSBrubbPRg=
