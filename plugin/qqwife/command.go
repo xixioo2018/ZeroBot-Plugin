@@ -516,7 +516,7 @@ func init() {
 				ctx.SendChain(message.Text("[qqwife]数据库发生问题力\n", err))
 				return
 			}
-			if ok {
+			if !ok {
 				ctx.SendChain(message.Text("今天还没有人结婚哦"))
 				return
 			}
