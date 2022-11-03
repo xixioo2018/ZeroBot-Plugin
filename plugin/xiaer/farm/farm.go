@@ -99,7 +99,7 @@ func init() {
 		})
 	engine.OnRegex("^查询([\\s]+)?(\\p{Han}+)([\\s]+)?$").SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
-			txt := ctx.State["args"].(string)
+			txt := ctx.State["regex_matched"].([]string)[2]
 			if txt != "" {
 				search(ctx, txt)
 			}
