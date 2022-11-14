@@ -4,6 +4,9 @@ package baiduaudit
 import (
 	"encoding/json"
 	"fmt"
+	"os"
+	"strconv"
+
 	"github.com/Baidu-AIP/golang-sdk/aip/censor"
 	"github.com/FloatTech/floatbox/binary"
 	"github.com/FloatTech/floatbox/file"
@@ -12,8 +15,6 @@ import (
 	"github.com/FloatTech/zbputils/img/text"
 	zero "github.com/wdvxdr1123/ZeroBot"
 	"github.com/wdvxdr1123/ZeroBot/message"
-	"os"
-	"strconv"
 )
 
 // 服务网址:https://console.bce.baidu.com/ai/?_=1665977657185#/ai/antiporn/overview/index
@@ -99,6 +100,7 @@ var (
 func init() {
 	engine := control.Register("baiduaudit", &ctrl.Options[*zero.Ctx]{
 		DisableOnDefault: false,
+		Brief:            "百度内容审核",
 		Help: "##该功能来自百度内容审核，需购买相关服务，并创建app##\n" +
 			"- 获取BDAKey\n" +
 			"- 配置BDAKey [API key] [Secret Key]\n" +
@@ -239,7 +241,7 @@ func init() {
 			config.Groups[ctx.Event.GroupID] = group
 			ctx.SendChain(message.At(ctx.Event.UserID), message.Text(fmt.Sprintf("本群%s已%s", k2, k1)))
 		})
-	engine.OnRegex(`^配置BDAKey\s*(.*)\s*(.*)$`, zero.SuperUserPermission).SetBlock(true).
+	engine.OnRegex(`^配置BDAKey\s(.*)\s(.*)$`, zero.SuperUserPermission).SetBlock(true).
 		Handle(func(ctx *zero.Ctx) {
 			k1 := ctx.State["regex_matched"].([]string)[1]
 			k2 := ctx.State["regex_matched"].([]string)[2]
