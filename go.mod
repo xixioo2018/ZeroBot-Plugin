@@ -104,3 +104,5 @@ require (
 replace modernc.org/sqlite => github.com/fumiama/sqlite3 v1.20.0-with-win386
 
 replace github.com/remyoudompheng/bigfft => github.com/fumiama/bigfft v0.0.0-20211011143303-6e0bfa3c836b
+
+replace github.com/RomiChan/syncx => github.com/RomiChan/syncx v0.0.0-20220404072119-d7ea0ae15a4c

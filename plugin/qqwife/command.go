@@ -217,15 +217,7 @@ func init() {
 				ctx.SendChain(message.Text("[ERROR]:", err))
 				return
 			}
-<<<<<<< HEAD
-			if !ok {
-				ctx.SendChain(message.Text("今天还没有人结婚哦"))
-				return
-			}
-			list, number, err := 民政局.花名册(gid)
-=======
 			list, err := 民政局.花名册(gid)
->>>>>>> master
 			if err != nil {
 				ctx.SendChain(message.Text("[ERROR]:", err))
 				return

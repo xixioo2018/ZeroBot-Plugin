@@ -512,16 +512,8 @@ func checkMistress(ctx *zero.Ctx) bool {
 		ctx.SendChain(message.Text("你的技能还在CD中..."))
 		return false
 	}
-<<<<<<< HEAD
-	if !ok {
-		ctx.SendChain(message.Text("ta现在还是单身哦，快向ta表白吧！"))
-		return false // 重置后也全是单身
-	}
-	fianceeinfo, fianceestatus, err := 民政局.查户口(gid, fiancee)
-=======
 	// 获取用户信息
 	fianceeInfo, _ := 民政局.查户口(gid, fiancee)
->>>>>>> master
 	switch {
 	case fianceeInfo == (userinfo{}): // 如果是空数据
 		ctx.SendChain(message.Text("ta现在还是单身哦,快向ta表白吧!"))
