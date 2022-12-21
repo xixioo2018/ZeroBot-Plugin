@@ -80,6 +80,7 @@ import (
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/cpstory"       // cp短打
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/danbooru"      // DeepDanbooru二次元图标签识别
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/diana"         // 嘉心糖发病
+	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/dress"         // 女装
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/drift_bottle"  // 漂流瓶
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/emojimix"      // 合成emoji
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/epidemic"      // 城市疫情查询
@@ -133,11 +134,13 @@ import (
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/translation"   // 翻译
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/vitsnyaru"     // vits猫雷
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/vtb_quotation" // vtb语录
+	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/wallet"        // 钱包
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/wangyiyun"     // 网易云音乐热评
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/wenben"        // 文本指令大全
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/wenxinAI"      // 百度文心AI画图
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/word_count"    // 聊天热词
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/wordle"        // 猜单词
+	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/ygo"           // 游戏王相关插件
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/ymgal"         // 月幕galgame
 
 	// _ "github.com/FloatTech/ZeroBot-Plugin/plugin/wtf"            // 鬼东西
@@ -193,9 +196,10 @@ import (
 )
 
 type zbpcfg struct {
+	Database database.Config    `json:"database"`
 	Z        zero.Config        `json:"zero"`
 	W        []*driver.WSClient `json:"ws"`
-	Database database.Config    `json:"database"`
+	S        []*driver.WSServer `json:"wss"`
 }
 
 var config zbpcfg
@@ -257,9 +261,12 @@ func init() {
 		if err != nil {
 			panic(err)
 		}
-		config.Z.Driver = make([]zero.Driver, len(config.W))
+		config.Z.Driver = make([]zero.Driver, len(config.W)+len(config.S))
 		for i, w := range config.W {
 			config.Z.Driver[i] = w
+		}
+		for i, s := range config.S {
+			config.Z.Driver[i+len(config.W)] = s
 		}
 		logrus.Infoln("[main] 从", *runcfg, "读取配置文件")
 		database.DefaultConfig = config.Database
