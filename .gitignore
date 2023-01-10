@@ -8,3 +8,5 @@ nohup.out
 zerobot
 ZeroBot-Plugin*
 config.json
+data/
+go.sum

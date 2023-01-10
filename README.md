@@ -1,9 +1,12 @@
 <div align="center">
   <a href="https://crypko.ai/crypko/5k8HyUVTq5421/">
-  <img src=".github/黒金.jpg" alt="看板娘" width = "400">
+  <img src=".github/hua_nobg_512.gif" alt="椛" width = "400">
   </a><br>
 
   <h1>ZeroBot-Plugin</h1>
+
+  “椛椛是[真寻](https://github.com/HibiKier/zhenxun_bot)的好朋友！”
+  
   ZeroBot-Plugin 是 ZeroBot 的 实用插件合集<br><br>
 
 
@@ -248,15 +251,6 @@ zerobot [-h] [-n nickname] [-t token] [-u url] [-p prefix] [-d|w] [-c|s config.j
 
 </details>
 <details>
-  <summary>词典匹配回复</summary>
-
-  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/thesaurus"`
-
-  - [x] 切换[kimo|傲娇|可爱]词库
-  - [x] 设置词库触发概率0.x (0<x<9)
-
-</details>
-<details>
   <summary>定时指令触发器</summary>
 
   `import _ "github.com/FloatTech/zbputils/job"`
@@ -402,6 +396,14 @@ print("run[CQ:image,file="+j["img"]+"]")
   `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/alipayvoice"`
 
   - [x] 支付宝到账 1
+
+</details>
+<details>
+  <summary>触发者撤回时也自动撤回</summary>
+
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/autowithdraw"`
+
+  - [x] 撤回一条消息
 
 </details>
 <details>
@@ -668,14 +670,6 @@ print("run[CQ:image,file="+j["img"]+"]")
 
 </details>
 <details>
-  <summary>城市疫情查询</summary>
-
-  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/epidemic"`
-
-  - [x] xxx疫情
-
-</details>
-<details>
   <summary>好友申请及群聊邀请事件处理</summary>
 
   `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/event"`
@@ -701,7 +695,7 @@ print("run[CQ:image,file="+j["img"]+"]")
 
   - [x] 运势 | 抽签
 
-  - [x] 设置底图[车万 DC4 爱因斯坦 星空列车 樱云之恋 富婆妹 李清歌 公主连结 原神 明日方舟 碧蓝航线 碧蓝幻想 战双 阴阳师 赛马娘 东方归言录 奇异恩典 夏日口袋 ASoul]
+  - [x] 设置底图[车万 DC4 爱因斯坦 星空列车 樱云之恋 富婆妹 李清歌 公主连结 原神 明日方舟 碧蓝航线 碧蓝幻想 战双 阴阳师 赛马娘 东方归言录 奇异恩典 夏日口袋 ASoul Hololive]
 
 </details>
 <details>
@@ -931,6 +925,8 @@ print("run[CQ:image,file="+j["img"]+"]")
   - [x] 让[宁宁|爱瑠|芳乃|茉子|丛雨|小春|七海]说(日语)
 
   - [x] 让[수아|미미르|아린|연화|유화|선배]说(韩语)
+
+  - [x] 让[派蒙|空|荧|阿贝多|枫原万叶|温迪|八重神子|纳西妲|钟离|诺艾尔|凝光|托马|北斗|莫娜|荒泷一斗|提纳里|芭芭拉|艾尔海森|雷电将军|赛诺|琴|班尼特|五郎|神里绫华|迪希雅|夜兰|辛焱|安柏|宵宫|云堇|妮露|烟绯|鹿野院平藏|凯亚|达达利亚|迪卢克|可莉|早柚|香菱|重云|刻晴|久岐忍|珊瑚宫心海|迪奥娜|戴因斯雷布|魈|神里绫人|丽莎|优菈|凯瑟琳|雷泽|菲谢尔|九条裟罗|甘雨|行秋|胡桃|迪娜泽黛|柯莱|申鹤|砂糖|萍姥姥|奥兹|罗莎莉亚|式大将|哲平|坎蒂丝|托克|留云借风真君|昆钧|塞琉斯|多莉|大肉丸|莱依拉|散兵|拉赫曼|杜拉夫|阿守|玛乔丽|纳比尔|海芭夏|九条镰治|阿娜耶|阿晃|阿扎尔|七七|博士|白术|埃洛伊|大慈树王|女士|丽塔|失落迷迭|缭乱星棘|伊甸|伏特加女孩|狂热蓝调|莉莉娅|萝莎莉娅|八重樱|八重霞|卡莲|第六夜想曲|卡萝尔|姬子|极地战刃|布洛妮娅|次生银翼|理之律者|迷城骇兔|希儿|魇夜星渊|黑希儿|帕朵菲莉丝|天元骑英|幽兰黛尔|德丽莎|月下初拥|朔夜观星|暮光骑士|明日香|李素裳|格蕾修|梅比乌斯|渡鸦|人之律者|爱莉希雅|爱衣|天穹游侠|琪亚娜|空之律者|薪炎之律者|云墨丹心|符华|识之律者|维尔薇|芽衣|雷之律者|阿波尼亚]说(中文)
 
 </details>
 <details>
@@ -1394,6 +1390,17 @@ print("run[CQ:image,file="+j["img"]+"]")
 	
 </details>
 <details>
+  <summary>词典匹配回复</summary>
+
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/thesaurus"`
+
+  - [x] 切换[kimo|傲娇|可爱]词库
+  - [x] 设置词库触发概率0.x (0<x<9)
+
+  - 注：由于占用资源较大，默认注释。
+
+</details>
+<details>
   <summary>鬼东西</summary>
 
   `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/wtf"`
@@ -1425,15 +1432,7 @@ print("run[CQ:image,file="+j["img"]+"]")
 
   - [x] @Bot 任意文本(任意一句话回复)
 
-  - [x] 设置回复模式[青云客 | 小爱 | ChatGPT]
-
-  - [x] 设置 ChatGPT SessionToken xxx
-
-  - [x] 重置ChatGPT连接
-  
-  - 注:
-    - 注册和获取 token 可以参见这两篇文章：[注册](https://www.cnblogs.com/ranxi169/p/16954797.html) [获取token](https://juejin.cn/post/7174088036035067917)
-    - 设置 SessionToken 时，请确保自己为超级管理员，然后私聊`/响应` `/禁用atri` `/禁用tts` `/启用aireply`，再发送`设置 ChatGPT SessionToken xxx`
+  - [x] 设置回复模式[青云客 | 小爱]
 
 </details>
 
