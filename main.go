@@ -134,6 +134,7 @@ import (
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/vtb_quotation" // vtb语录
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/wallet"        // 钱包
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/wangyiyun"     // 网易云音乐热评
+	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/warframeapi"   // warframeAPI插件
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/wenben"        // 文本指令大全
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/wenxinAI"      // 百度文心AI画图
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/word_count"    // 聊天热词
@@ -271,7 +272,6 @@ func init() {
 		database.DefaultConfig = config.Database
 		return
 	}
-
 	config.W = []*driver.WSClient{driver.NewWebSocketClient(*url, *token)}
 	config.Z = zero.Config{
 		NickName:       append([]string{*adana}, "ATRI", "atri", "亚托莉", "アトリ"),
