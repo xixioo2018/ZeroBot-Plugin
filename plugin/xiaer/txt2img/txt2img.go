@@ -116,7 +116,6 @@ func applyPic(prompt, negativePrompt string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	log.Info("申请结果: ", string(rspBody))
 	var result PicResult
 	if err = json.Unmarshal(rspBody, &result); err != nil {
 		return "", err
