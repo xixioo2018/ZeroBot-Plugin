@@ -34,7 +34,7 @@ func init() {
 			if txt != "" {
 				split := strings.Split(txt, "\n")
 				var prompt string
-				var negativePrompt string
+				var negativePrompt = "paintings, sketches, (worst quality:2), (low quality:2), (normal quality:2), lowres, normal quality, ((monochrome)), ((grayscale)), skin spots, acnes, skin blemishes, age spot, glans, nsfw, nipples"
 				if len(split) == 2 {
 					prompt = split[1]
 				} else if len(split) == 3 {
