@@ -187,6 +187,7 @@ import (
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/art_of_war" // 纸上谈兵
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/farm"       // 农场
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/seller"     // 好友买卖
+	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/txt2img"    // 文转图三次元
 
 	"github.com/sirupsen/logrus"
 	zero "github.com/wdvxdr1123/ZeroBot"
