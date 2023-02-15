@@ -42,7 +42,7 @@ func init() {
 					prompt = split[1]
 					negativePrompt = split[2]
 				}
-				if !strings.Contains(prompt, "koreanDollLikeness_v10") {
+				if !strings.Contains(prompt, "DollLikeness_v") {
 					prompt = "<lora:koreanDollLikeness_v10:0.8>, " + prompt
 				}
 				if !strings.Contains(prompt, "photorealistic") {
