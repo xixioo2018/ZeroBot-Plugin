@@ -24,7 +24,8 @@ func init() {
 		Help: "文转图\n" +
 			"- 文转图 \n[提示] \n[负面提示]" +
 			"- 提示: <lora:koreanDollLikeness_v10:0.8>, best quality, ultra high res, (photorealistic:1.4), 1woman, sleeveless white button shirt, black skirt, black choker, cute, (Kpop idol), (aegyo sal:1), (silver hair:1), ((puffy eyes)), looking at viewer, peace sign\n" +
-			"- 负面提示: paintings, sketches, (worst quality:2), (low quality:2), (normal quality:2), lowres, normal quality, ((monochrome)), ((grayscale)), skin spots, acnes, skin blemishes, age spot, glans, nsfw, nipples",
+			"- 负面提示: paintings, sketches, (worst quality:2), (low quality:2), (normal quality:2), lowres, normal quality, ((monochrome)), ((grayscale)), skin spots, acnes, skin blemishes, age spot, glans, nsfw, nipples" +
+			"- 可选：自带参数<lora:koreanDollLikeness_v10:0.8>, (photorealistic:1.4)",
 	})
 	engine.OnPrefix("文转图").SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
@@ -41,6 +42,13 @@ func init() {
 					prompt = split[1]
 					negativePrompt = split[2]
 				}
+				if !strings.Contains(prompt, "koreanDollLikeness_v10") {
+					prompt = "<lora:koreanDollLikeness_v10:0.8>, " + prompt
+				}
+				if !strings.Contains(prompt, "photorealistic") {
+					prompt += ", (photorealistic:1.4)"
+				}
+
 				art(ctx, prompt, negativePrompt)
 			}
 		})
@@ -88,7 +96,7 @@ func applyPic(prompt, negativePrompt string) (string, error) {
 		"steps":                                20,
 		"cfg_scale":                            7,
 		"width":                                512,
-		"height":                               512,
+		"height":                               768,
 		"restore_faces":                        false,
 		"tiling":                               false,
 		"negative_prompt":                      negativePrompt,
