@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/FloatTech/ZeroBot-Plugin/database"
 	"math/rand"
 	"os"
 	"runtime"
