@@ -10,3 +10,4 @@ ZeroBot-Plugin*
 config.json
 data/
 go.sum
+*.syso
