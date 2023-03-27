@@ -132,6 +132,7 @@ import (
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/setutime"         // 来份涩图
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/shadiao"          // 沙雕app
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/shindan"          // 测定
+	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/steam"            // steam相关
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/tarot"            // 抽塔罗牌
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/tiangou"          // 舔狗日记
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/tracemoe"         // 搜番
@@ -144,12 +145,12 @@ import (
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/warframeapi"      // warframeAPI插件
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/wenben"           // 文本指令大全
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/wenxinAI"         // 百度文心AI画图
+	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/wife"             // 抽老婆
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/word_count"       // 聊天热词
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/wordle"           // 猜单词
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/ygo"              // 游戏王相关插件
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/ymgal"            // 月幕galgame
 
-	// _ "github.com/FloatTech/ZeroBot-Plugin/plugin/thesaurus"     // 词典匹配回复
 	// _ "github.com/FloatTech/ZeroBot-Plugin/plugin/wtf"           // 鬼东西
 
 	//                               ^^^^                               //
@@ -173,6 +174,8 @@ import (
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/curse" // 骂人
 
 	//_ "github.com/FloatTech/ZeroBot-Plugin/plugin/ai_reply" // 人工智能回复
+
+	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/thesaurus" // 词典匹配回复
 
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/breakrepeat" // 打断复读
 
@@ -242,13 +245,12 @@ func init() {
 		fmt.Println("Usage:")
 		flag.PrintDefaults()
 		os.Exit(0)
-	} else {
-		if *d && !*w {
-			logrus.SetLevel(logrus.DebugLevel)
-		}
-		if *w {
-			logrus.SetLevel(logrus.WarnLevel)
-		}
+	}
+	if *d && !*w {
+		logrus.SetLevel(logrus.DebugLevel)
+	}
+	if *w {
+		logrus.SetLevel(logrus.WarnLevel)
 	}
 
 	for _, s := range flag.Args() {
