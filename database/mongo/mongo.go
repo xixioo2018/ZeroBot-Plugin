@@ -17,15 +17,26 @@ var (
 
 func InitMongo(database2 database.Config) {
 	uri := fmt.Sprintf(
-		"mongodb+srv://%s:%s@%s/%s?retryWrites=true&w=majority",
+		"mongodb://%s:%s@%s:%d/%s?w=majority",
 		database2.Mongo.UserName,
 		database2.Mongo.Password,
 		database2.Mongo.Hostname,
+		database2.Mongo.Port,
 		database2.Mongo.Database,
 	)
+	if database2.Mongo.Port != 0 {
+		uri = fmt.Sprintf(
+			"mongodb+srv://%s:%s@%s/%s?retryWrites=true&w=majority",
+			database2.Mongo.UserName,
+			database2.Mongo.Password,
+			database2.Mongo.Hostname,
+			database2.Mongo.Database,
+		)
+	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	client, _ := mongo.Connect(ctx, options.Client().ApplyURI(uri).SetServerAPIOptions(options.ServerAPI(options.ServerAPIVersion1)))
+	client, _ := mongo.Connect(ctx, options.Client().ApplyURI(uri))
 	mongoClient = client
 	dbName = database2.Mongo.Database
 }
