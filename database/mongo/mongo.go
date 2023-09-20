@@ -25,12 +25,12 @@ func InitMongo(database2 database.Config) {
 	)
 	if database2.Mongo.Port != 0 {
 		uri = fmt.Sprintf(
-			"mongodb://%s:%s@%s:%d/%s?w=majority",
+			"mongodb://%s:%s@%s:%d/?directConnection=true&retryWrites=true&w=majority",
 			database2.Mongo.UserName,
 			database2.Mongo.Password,
 			database2.Mongo.Hostname,
 			database2.Mongo.Port,
-			database2.Mongo.Database,
+			//database2.Mongo.Database,
 		)
 	}
 
