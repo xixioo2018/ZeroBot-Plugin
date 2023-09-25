@@ -87,7 +87,8 @@ func init() {
 		})
 	engine.OnPrefix("浇水").SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
-			water(ctx)
+			waterRes := water(ctx)
+			ctx.SendChain(waterRes)
 		})
 	engine.OnFullMatch("购买土地").SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
@@ -248,6 +249,7 @@ func buyField(ctx *zero.Ctx) {
 }
 
 func oneKeyOperation(ctx *zero.Ctx) {
+	segments := make([]message.MessageSegment, 0)
 	// 收菜
 	collect(ctx)
 	// 购买种子
@@ -276,13 +278,19 @@ func oneKeyOperation(ctx *zero.Ctx) {
 	}
 
 	if buyCount > 0 && maxCrop.Level > 0 {
-		buyCrop(ctx, maxCrop, buyCount)
+		buyCropRes := buyCrop(ctx, maxCrop, buyCount)
+		segments = append(segments, buyCropRes)
 		// 种植
-		plantCrop(ctx, maxCrop)
+		plantCropRes := plantCrop(ctx, maxCrop)
+		segments = append(segments, plantCropRes)
 	}
 
 	// 浇水
-	water(ctx)
+	waterRes := water(ctx)
+	segments = append(segments, waterRes)
+	if len(segments) > 0 {
+		ctx.SendChain(segments...)
+	}
 }
 
 func search(ctx *zero.Ctx, name string) bool {
@@ -430,7 +438,8 @@ func buy(ctx *zero.Ctx, name string, number int) bool {
 	//
 	for _, crop := range cropList {
 		if strings.EqualFold(crop.Name, name) {
-			buyCrop(ctx, crop, number)
+			segment := buyCrop(ctx, crop, number)
+			ctx.SendChain(segment)
 			return true
 		}
 	}
@@ -449,29 +458,33 @@ func buy(ctx *zero.Ctx, name string, number int) bool {
 	return false
 }
 
-func buyCrop(ctx *zero.Ctx, crop Crop, number int) {
+func buyCrop(ctx *zero.Ctx, crop Crop, number int) message.MessageSegment {
 	assets := assets(sendUser(ctx))
 	level := level(assets.Exp)
 	stock := stock(sendUser(ctx))
 	if crop.Level > level {
-		ctx.SendChain(message.Text(fmt.Sprintf("您不能购买超过您自身等级的作物种子, 购买%s需要%d级, 您当前为%d级. ", crop.Name, crop.Level, level)))
-		return
+		//ctx.SendChain()
+		return message.Text(fmt.Sprintf("您不能购买超过您自身等级的作物种子, 购买%s需要%d级, 您当前为%d级. ", crop.Name, crop.Level, level))
 	}
 	downCoin := int64(crop.SeedPrice * number)
 	if downCoin > assets.Coins {
-		ctx.SendChain(message.Text(fmt.Sprintf("您的阳光不足, 购买%d枚%s种子需要%d阳光, 您只有%d阳光. ", number, crop.Name, downCoin, assets.Coins)))
-		return
+		//segments = append(segments, )
+		//ctx.SendChain()
+		return message.Text(fmt.Sprintf("您的阳光不足, 购买%d枚%s种子需要%d阳光, 您只有%d阳光. ", number, crop.Name, downCoin, assets.Coins))
 	}
 	inStock, _ := stock.CropCount[strconv.Itoa(crop.Level)]
 	toInStock := inStock + number
 	if toInStock > 99 {
-		ctx.SendChain(message.Text("一种种子持有量不能超过99枚"))
-		return
+		//segments = append(segments, message.Text("一种种子持有量不能超过99枚"))
+		//ctx.SendChain(message.Text("一种种子持有量不能超过99枚"))
+		return message.Text("一种种子持有量不能超过99枚")
 	}
 	stock.CropCount[strconv.Itoa(crop.Level)] = toInStock
 	stockUpdate(stock)
 	assetsCoinsInc(assets.GroupCode, assets.Uin, -downCoin)
-	ctx.SendChain(message.Text(fmt.Sprintf("购买成功\n\n%s ↑ %d => %d\n%s ↓ %d => %d", crop.FruitEmoji, number, toInStock, emojiSun, downCoin, assets.Coins-downCoin)))
+	//segments = append(segments, message.Text(fmt.Sprintf("购买成功\n\n%s ↑ %d => %d\n%s ↓ %d => %d", crop.FruitEmoji, number, toInStock, emojiSun, downCoin, assets.Coins-downCoin)))
+	//ctx.SendChain(message.Text(fmt.Sprintf("购买成功\n\n%s ↑ %d => %d\n%s ↓ %d => %d", crop.FruitEmoji, number, toInStock, emojiSun, downCoin, assets.Coins-downCoin)))
+	return message.Text(fmt.Sprintf("购买成功\n\n%s ↑ %d => %d\n%s ↓ %d => %d", crop.FruitEmoji, number, toInStock, emojiSun, downCoin, assets.Coins-downCoin))
 }
 
 func buyPet(ctx *zero.Ctx, pet Pet) {
@@ -520,14 +533,15 @@ func plant(ctx *zero.Ctx, name string) bool {
 	//
 	for _, crop := range cropList {
 		if strings.EqualFold(crop.Name, name) {
-			plantCrop(ctx, crop)
+			segment := plantCrop(ctx, crop)
+			ctx.SendChain(segment)
 			return true
 		}
 	}
 	return false
 }
 
-func plantCrop(ctx *zero.Ctx, crop Crop) {
+func plantCrop(ctx *zero.Ctx, crop Crop) message.MessageSegment {
 	now := now()
 	builder := strings.Builder{}
 	assets := assets(sendUser(ctx))
@@ -565,7 +579,8 @@ func plantCrop(ctx *zero.Ctx, crop Crop) {
 		assetsExpInc(assets.GroupCode, assets.Uin, expUp)
 		builder.WriteString(fmt.Sprintf("\n%s ↑ %d => %d", emojiExp, expUp, assets.Exp+expUp))
 	}
-	ctx.SendChain(message.Text(builder.String()))
+	//ctx.SendChain(message.Text(builder.String()))
+	return message.Text(builder.String())
 }
 
 func collect(ctx *zero.Ctx) {
@@ -876,7 +891,7 @@ func GetFirstAt(ctx *zero.Ctx) (bool, int64) {
 	return false, 0
 }
 
-func water(ctx *zero.Ctx) {
+func water(ctx *zero.Ctx) message.MessageSegment {
 	// 加锁
 	lock, err := lockUnit(sendUser(ctx))
 	if err != nil {
@@ -948,7 +963,8 @@ func water(ctx *zero.Ctx) {
 		assetsExpInc(ctx.Event.GroupID, uin, expUp)
 		builder.WriteString(fmt.Sprintf("\n%s ↑ %d => %d", emojiExp, expUp, assets.Exp+expUp))
 	}
-	ctx.SendChain(message.Text(builder.String()))
+	//ctx.SendChain(message.Text(builder.String()))
+	return message.Text(builder.String())
 }
 
 // func sendUser(groupMessage *message.GroupMessage) (groupCode int64, uin int64) {
