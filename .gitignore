@@ -11,3 +11,4 @@ config.json
 data/
 go.sum
 *.syso
+log
