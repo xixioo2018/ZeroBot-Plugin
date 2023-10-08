@@ -3,9 +3,10 @@ package wtf
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
+	"io"
+	"net/http"
 	"net/url"
-
-	"github.com/FloatTech/floatbox/web"
 )
 
 /* JS path getter for https://wtf.hiigara.net/ranking
@@ -134,7 +135,7 @@ func (w *wtf) predict(names ...string) (string, error) {
 		name += "/" + url.QueryEscape(n)
 	}
 	u := apiprefix + w.path + name
-	r, err := web.GetData(u)
+	r, err := GetDataFromProxy(u)
 	if err != nil {
 		return "", err
 	}
@@ -147,4 +148,33 @@ func (w *wtf) predict(names ...string) (string, error) {
 		return "> " + w.name + "\n" + re.Text, nil
 	}
 	return "", errors.New(re.Msg)
+}
+
+// GetDataFromProxy 获取数据
+func GetDataFromProxy(urlStr string) (data []byte, err error) {
+	proxyURL, err := url.Parse("http://192.168.2.83:10811")
+	// 创建一个SOCKS5代理拨号器
+	if err != nil {
+		return nil, err
+	}
+
+	// 创建一个HTTP客户端，并配置代理
+	client := &http.Client{
+		Transport: &http.Transport{
+			Proxy: http.ProxyURL(proxyURL),
+		},
+	}
+
+	var response *http.Response
+	response, err = client.Get(urlStr)
+	if err == nil {
+		if response.StatusCode != http.StatusOK {
+			s := fmt.Sprintf("status code: %d", response.StatusCode)
+			err = errors.New(s)
+			return
+		}
+		data, err = io.ReadAll(response.Body)
+		response.Body.Close()
+	}
+	return
 }
