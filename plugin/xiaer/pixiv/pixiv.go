@@ -39,9 +39,8 @@ func init() {
 		})
 	engine.OnPrefix("pixiv搜图").SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
-			log.Info("收到查询消息")
 			txt := ctx.State["args"].(string)
-			log.Info("查询画：", txt)
+			log.Info("pixiv搜图：", txt)
 			if txt != "" {
 				search(ctx, txt)
 			}
@@ -65,7 +64,7 @@ func getProxyClient() (*http.Client, error) {
 }
 
 func search(ctx *zero.Ctx, text string) {
-	log.Info("开始查询 ", text)
+	log.Info("pixiv搜图 ", text)
 	reqUrl := "https://www.pixiv.net/ajax/search/illustrations/" + text + "?word=" + text + "&order=date_d&mode=all&p=1&s_mode=s_tag&type=illust_and_ugoira&lang=zh"
 	method := "GET"
 
@@ -103,10 +102,16 @@ func search(ctx *zero.Ctx, text string) {
 		))
 	}
 	length := len(pixivResponse.Body.Illust.Data)
-	rand.Seed(time.Now().UnixNano())
-	randomNum := rand.Intn(length)
-	data := pixivResponse.Body.Illust.Data[randomNum]
-	getPicDataFromProxy(ctx, data.Url)
+	if length > 0 {
+		rand.Seed(time.Now().UnixNano())
+		randomNum := rand.Intn(length)
+		data := pixivResponse.Body.Illust.Data[randomNum]
+		getPicDataFromProxy(ctx, data.Url)
+	} else {
+		ctx.SendChain(message.Text(
+			"没有找到",
+		))
+	}
 }
 
 func getPicDataFromProxy(ctx *zero.Ctx, picUrl string) {
@@ -184,9 +189,8 @@ type PixivResponse struct {
 			Recent    []interface{} `json:"recent"`
 			Permanent []interface{} `json:"permanent"`
 		} `json:"popular"`
-		RelatedTags    []string                     `json:"relatedTags"`
-		TagTranslation map[string]map[string]string `json:"tagTranslation"`
-		ZoneConfig     struct {
+		RelatedTags []string `json:"relatedTags"`
+		ZoneConfig  struct {
 			Header struct {
 				Url string `json:"url"`
 			} `json:"header"`
