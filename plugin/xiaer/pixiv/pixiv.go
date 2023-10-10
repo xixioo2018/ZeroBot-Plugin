@@ -213,7 +213,7 @@ type PixivResponse struct {
 				Min *int        `json:"min"`
 				Max interface{} `json:"max"`
 			} `json:"bookmarkRanges"`
-		} `json:"illust"`
+		} `json:"illustManga"`
 		Popular struct {
 			Recent []struct {
 				Id                      string      `json:"id"`
