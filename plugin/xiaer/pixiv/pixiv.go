@@ -101,7 +101,18 @@ func search(ctx *zero.Ctx, text string) {
 			err.Error(),
 		))
 	}
-	length := len(pixivResponse.Body.Popular.Permanent)
+	urlList := make([]string, 0)
+	for _, s := range pixivResponse.Body.Popular.Permanent {
+		urlList = append(urlList, s.Url)
+	}
+	for _, s := range pixivResponse.Body.Illust.Data {
+		urlList = append(urlList, s.Url)
+	}
+	if len(urlList) >= 10 {
+		urlList = urlList[:10]
+	}
+
+	length := len(urlList)
 	if length > 0 {
 		//rand.Seed(time.Now().UnixNano())
 		//randomNum := rand.Intn(length)
@@ -109,13 +120,13 @@ func search(ctx *zero.Ctx, text string) {
 
 		results := make(chan []byte, length)
 		var wg sync.WaitGroup
-		for _, s := range pixivResponse.Body.Popular.Permanent {
+		for _, s := range urlList {
 			wg.Add(1)
 			go func(url string) {
 				picData := getPicDataFromProxy(url)
 				results <- picData
 				wg.Done()
-			}(s.Url)
+			}(s)
 		}
 		wg.Wait()
 		close(results)
