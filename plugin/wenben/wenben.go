@@ -16,9 +16,9 @@ import (
 
 const (
 	tianqi  = "https://xiaobai.klizi.cn/API/other/weather_1.php?data=&msg=%v" // api地址
-	pinyin  = "http://ovooa.com/API/pinyin/api.php?type=text&msg=%v"
+	pinyin  = "http://ovooa.sc1.fun/API/pinyin/api.php?type=text&msg=%v"
 	yiyan   = "https://v1.hitokoto.cn/?c=a&c=b&c=c&c=d&c=h&c=i" // 动漫 漫画 游戏 文学 影视 诗词
-	kouling = "http://ovooa.com/API/rao/api.php?type=text"      // 口令
+	kouling = "http://ovooa.sc1.fun/API/rao/api.php?type=text"  // 口令
 	tang    = "http://api.btstu.cn/yan/api.php?charset=utf-8&encode=text"
 	qing    = "https://xiaobai.klizi.cn/API/other/wtqh.php"
 )
