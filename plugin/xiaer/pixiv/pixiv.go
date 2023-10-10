@@ -10,9 +10,9 @@ import (
 	zero "github.com/wdvxdr1123/ZeroBot"
 	"github.com/wdvxdr1123/ZeroBot/message"
 	"io"
-	"math/rand"
 	"net/http"
 	"net/url"
+	"sync"
 	"time"
 )
 
@@ -101,12 +101,36 @@ func search(ctx *zero.Ctx, text string) {
 			err.Error(),
 		))
 	}
-	length := len(pixivResponse.Body.Illust.Data)
+	length := len(pixivResponse.Body.Popular.Recent)
 	if length > 0 {
-		rand.Seed(time.Now().UnixNano())
-		randomNum := rand.Intn(length)
-		data := pixivResponse.Body.Illust.Data[randomNum]
-		getPicDataFromProxy(ctx, data.Url)
+		//rand.Seed(time.Now().UnixNano())
+		//randomNum := rand.Intn(length)
+		//data := pixivResponse.Body.Popular.Recent[randomNum]
+
+		results := make(chan []byte, length)
+		var wg sync.WaitGroup
+		for _, s := range pixivResponse.Body.Popular.Recent {
+			wg.Add(1)
+			go func(url string) {
+				picData := getPicDataFromProxy(url)
+				results <- picData
+				wg.Done()
+			}(s.Url)
+		}
+		wg.Wait()
+		close(results)
+
+		segments := make([]message.MessageSegment, 0)
+		for re := range results {
+			if re != nil {
+				segments = append(segments, message.ImageBytes(re))
+			}
+		}
+		if len(segments) > 0 {
+			if id := ctx.Send(message.Message{ctxext.FakeSenderForwardNode(ctx, segments...)}).ID(); id == 0 {
+				ctx.SendChain(message.Text("ERROR: 可能被风控或下载图片用时过长，请耐心等待"))
+			}
+		}
 	} else {
 		ctx.SendChain(message.Text(
 			"没有找到",
@@ -114,35 +138,29 @@ func search(ctx *zero.Ctx, text string) {
 	}
 }
 
-func getPicDataFromProxy(ctx *zero.Ctx, picUrl string) {
+func getPicDataFromProxy(picUrl string) []byte {
 	client, err := getProxyClient()
 	if err != nil {
-		ctx.SendChain(message.Text(
-			err.Error(),
-		))
-		return
+		return nil
 	}
 	req, err := http.NewRequest("GET", picUrl, nil)
 	req.Header.Add("Referer", "https://www.pixiv.net/")
 
 	if err != nil {
-		fmt.Println(err)
-		return
+		return nil
 	}
 
 	res, err := client.Do(req)
 	if err != nil {
-		fmt.Println(err)
-		return
+		return nil
 	}
 	defer res.Body.Close()
 
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		fmt.Println(err)
-		return
+		return nil
 	}
-	ctx.SendChain(message.ImageBytes(body))
+	return body
 }
 
 type PixivResponse struct {
@@ -186,7 +204,32 @@ type PixivResponse struct {
 			} `json:"bookmarkRanges"`
 		} `json:"illust"`
 		Popular struct {
-			Recent    []interface{} `json:"recent"`
+			Recent []struct {
+				Id                      string      `json:"id"`
+				Title                   string      `json:"title"`
+				IllustType              int         `json:"illustType"`
+				XRestrict               int         `json:"xRestrict"`
+				Restrict                int         `json:"restrict"`
+				Sl                      int         `json:"sl"`
+				Url                     string      `json:"url"`
+				Description             string      `json:"description"`
+				Tags                    []string    `json:"tags"`
+				UserId                  string      `json:"userId"`
+				UserName                string      `json:"userName"`
+				Width                   int         `json:"width"`
+				Height                  int         `json:"height"`
+				PageCount               int         `json:"pageCount"`
+				IsBookmarkable          bool        `json:"isBookmarkable"`
+				BookmarkData            interface{} `json:"bookmarkData"`
+				Alt                     string      `json:"alt"`
+				TitleCaptionTranslation interface{} `json:"titleCaptionTranslation"`
+				CreateDate              time.Time   `json:"createDate"`
+				UpdateDate              time.Time   `json:"updateDate"`
+				IsUnlisted              bool        `json:"isUnlisted"`
+				IsMasked                bool        `json:"isMasked"`
+				AiType                  int         `json:"aiType"`
+				ProfileImageUrl         string      `json:"profileImageUrl"`
+			} `json:"recent"`
 			Permanent []interface{} `json:"permanent"`
 		} `json:"popular"`
 		RelatedTags []string `json:"relatedTags"`
