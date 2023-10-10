@@ -65,7 +65,7 @@ func getProxyClient() (*http.Client, error) {
 
 func search(ctx *zero.Ctx, text string) {
 	log.Info("pixiv搜图 ", text)
-	reqUrl := "https://www.pixiv.net/ajax/search/illustrations/" + text + "?word=" + text + "&order=date_d&mode=all&p=1&s_mode=s_tag&type=illust_and_ugoira&lang=zh"
+	reqUrl := "https://www.pixiv.net/ajax/search/artworks/" + text + "?word=" + text + "&order=date_d&mode=all&p=1&s_mode=s_tag&type=illust_and_ugoira&lang=zh"
 	method := "GET"
 
 	client, err := getProxyClient()
@@ -101,7 +101,7 @@ func search(ctx *zero.Ctx, text string) {
 			err.Error(),
 		))
 	}
-	length := len(pixivResponse.Body.Popular.Recent)
+	length := len(pixivResponse.Body.Popular.Permanent)
 	if length > 0 {
 		//rand.Seed(time.Now().UnixNano())
 		//randomNum := rand.Intn(length)
@@ -109,7 +109,7 @@ func search(ctx *zero.Ctx, text string) {
 
 		results := make(chan []byte, length)
 		var wg sync.WaitGroup
-		for _, s := range pixivResponse.Body.Popular.Recent {
+		for _, s := range pixivResponse.Body.Popular.Permanent {
 			wg.Add(1)
 			go func(url string) {
 				picData := getPicDataFromProxy(url)
@@ -230,7 +230,32 @@ type PixivResponse struct {
 				AiType                  int         `json:"aiType"`
 				ProfileImageUrl         string      `json:"profileImageUrl"`
 			} `json:"recent"`
-			Permanent []interface{} `json:"permanent"`
+			Permanent []struct {
+				Id                      string      `json:"id"`
+				Title                   string      `json:"title"`
+				IllustType              int         `json:"illustType"`
+				XRestrict               int         `json:"xRestrict"`
+				Restrict                int         `json:"restrict"`
+				Sl                      int         `json:"sl"`
+				Url                     string      `json:"url"`
+				Description             string      `json:"description"`
+				Tags                    []string    `json:"tags"`
+				UserId                  string      `json:"userId"`
+				UserName                string      `json:"userName"`
+				Width                   int         `json:"width"`
+				Height                  int         `json:"height"`
+				PageCount               int         `json:"pageCount"`
+				IsBookmarkable          bool        `json:"isBookmarkable"`
+				BookmarkData            interface{} `json:"bookmarkData"`
+				Alt                     string      `json:"alt"`
+				TitleCaptionTranslation interface{} `json:"titleCaptionTranslation"`
+				CreateDate              time.Time   `json:"createDate"`
+				UpdateDate              time.Time   `json:"updateDate"`
+				IsUnlisted              bool        `json:"isUnlisted"`
+				IsMasked                bool        `json:"isMasked"`
+				AiType                  int         `json:"aiType"`
+				ProfileImageUrl         string      `json:"profileImageUrl"`
+			} `json:"permanent"`
 		} `json:"popular"`
 		RelatedTags []string `json:"relatedTags"`
 		ZoneConfig  struct {
