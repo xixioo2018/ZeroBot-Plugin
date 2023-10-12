@@ -32,6 +32,7 @@ const TrueEmoji = "✔️"
 
 type Operation struct {
 	Name   string
+	Emoji  string
 	Cost   float64 // 花费
 	Salary float64 // 薪水
 	Worth  float64 // 随机身价
@@ -39,17 +40,17 @@ type Operation struct {
 }
 
 var OperationData = map[string]Operation{
-	"安抚":  {"\U0001FAF3安抚", 0, 0, 0, 1},
-	"臭骂":  {"🤬一顿臭骂", 0, 0, 0, 1},
-	"板砖":  {"\U0001F9F1拿板砖拍晕", 30, 0, 0, 1},
-	"挖煤":  {"⛏去当家教或去黑煤窑挖煤", 150, 50, 0, 5},
-	"卖唱":  {"🎤去歌厅卖唱", 30, 80, 0, 5},
-	"保姆":  {"👩‍⚕️去当小保姆", 30, 100, 0, 5},
-	"摊贩":  {"🧑‍⚕️去当小摊贩", 40, 100, 0, 5},
-	"活埋":  {"🕳挖了坑活埋", 0, 0, 50, 10},
-	"饿":   {"🍲饿了3天3夜", 0, 0, 100, 10},
-	"钢管舞": {"💃跳一段钢管舞", 100, 0, 0, 10},
-	"充电":  {"✍去学习充电", 0, 42, 0, 5},
+	"安抚":  {"安抚", "\U0001FAF3", 0, 0, 0, 1},
+	"臭骂":  {"一顿臭骂", "🤬", 0, 0, 0, 1},
+	"板砖":  {"拿板砖拍晕", "\U0001F9F1", 30, 0, 0, 1},
+	"挖煤":  {"去当家教或去黑煤窑挖煤", "⛏", 150, 50, 0, 5},
+	"卖唱":  {"去歌厅卖唱", "🎤", 30, 80, 0, 5},
+	"保姆":  {"去当小保姆", "👩‍⚕️", 30, 100, 0, 5},
+	"摊贩":  {"去当小摊贩", "🧑‍⚕️", 40, 100, 0, 5},
+	"活埋":  {"挖了坑活埋", "🕳", 0, 0, 50, 10},
+	"饿":   {"饿了3天3夜", "🍲", 0, 0, 100, 10},
+	"钢管舞": {"跳一段钢管舞", "💃", 100, 0, 0, 10},
+	"充电":  {"去学习充电", "✍", 0, 42, 0, 5},
 }
 
 func init() {
@@ -155,7 +156,7 @@ func operationList(ctx *zero.Ctx) {
 	result := "操作列表 : \n"
 
 	for key, operation := range OperationData {
-		result += fmt.Sprintf("%s: 花费%.0f 薪资%.0f/h 身价±%.0f 点数%d\n", key, operation.Cost, operation.Salary, operation.Salary, operation.Count)
+		result += fmt.Sprintf("%s: %s 花费%.0f 薪资%.0f/h 身价±%.0f 点数%d\n", key, operation.Emoji, operation.Cost, operation.Salary, operation.Salary, operation.Count)
 	}
 
 	ctx.SendChain(message.Text(result))
@@ -299,10 +300,10 @@ func operateSlaves(ctx *zero.Ctx, content string) {
 	atMemberNickName := xiaer.CardNameInGroup(ctx, at)
 	sprintf := fmt.Sprintf(
 		"操作成功 : \n"+
-			" 安排【%s】 【%s】\n"+
+			" 安排【%s】 【%s】 【%s】\n"+
 			" 操作花费 : %.0f \n"+
 			" 可操作点数: %d \n",
-		atMemberNickName, op.Name, op.Cost, seller.OperationCount,
+		atMemberNickName, op.Emoji, op.Name, op.Cost, seller.OperationCount,
 	)
 	logger.Error(sprintf)
 	ctx.SendChain(message.Text(
