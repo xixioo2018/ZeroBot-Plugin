@@ -97,6 +97,17 @@ func init() {
 			}
 			ctx.SendChain(message.Text("绑定成功"))
 		})
+	engine.OnFullMatch("查询在线人数").SetBlock(true).Limit(ctxext.LimitByGroup).
+		Handle(func(ctx *zero.Ctx) {
+			log.Info("开始查询在线人数")
+			uid, err := getUidByQQ(ctx.Event.UserID)
+			if err != nil {
+				ctx.SendChain(message.Text("当前账号暂未绑定"))
+				return
+			}
+			token := login(uid)
+			GetOnlineCount(ctx, token)
+		})
 	engine.OnPrefix("发送物品").SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
 			log.Info("收到发送物品消息")
@@ -117,7 +128,11 @@ type TokenRes struct {
 	Token string `json:"token"`
 }
 
-func login(uid string, password string) string {
+func login(uid string) string {
+	password := "user_password"
+	if uid == "100000002" {
+		password = "abc123_"
+	}
 	url := "http://127.0.0.1:4001/login"
 	method := "POST"
 
@@ -169,6 +184,49 @@ func getGoodsIdByGoodsName(goodsName string) string {
 	return goodsName
 }
 
+func GetOnlineCount(ctx *zero.Ctx, token string) {
+	url := "http://127.0.0.1:4001/api/online-count"
+	method := "GET"
+
+	client := &http.Client{}
+	req, err := http.NewRequest(method, url, nil)
+
+	if err != nil {
+		log.Info(err)
+		return
+	}
+	req.Header.Add("Authorization", token)
+
+	res, err := client.Do(req)
+	if err != nil {
+		log.Info(err)
+		return
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode == 200 {
+		body, err := io.ReadAll(res.Body)
+		if err != nil {
+			log.Info(err)
+			return
+		}
+		dataRes := DataRes{}
+		err = json.Unmarshal(body, &dataRes)
+		if err != nil {
+			ctx.SendChain(message.Text("查询在线人数失败"))
+			return
+		}
+
+		ctx.SendChain(message.Text("当前在线人数: ", dataRes.Data))
+	} else {
+		ctx.SendChain(message.Text("查询在线人数失败"))
+	}
+}
+
+type DataRes struct {
+	Data int64 `json:"data"`
+}
+
 func sendGoods(ctx *zero.Ctx, goodsName string, goodsNumber string) {
 	// 0. 获取GoodsName是否存在
 	goodsId := getGoodsIdByGoodsName(goodsName)
@@ -182,11 +240,7 @@ func sendGoods(ctx *zero.Ctx, goodsName string, goodsNumber string) {
 		ctx.SendChain(message.Text(err.Error()))
 	}
 	// 3. 执行login获取token
-	password := "user_password"
-	if uid == "100000002" {
-		password = "abc123_"
-	}
-	token := login(uid, password)
+	token := login(uid)
 	if len(token) == 0 {
 		ctx.SendChain(message.Text("登录失败"))
 	}
