@@ -3,6 +3,7 @@ package genshin_p
 import (
 	"encoding/json"
 	"errors"
+	"github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer"
 	ctrl "github.com/FloatTech/zbpctrl"
 	"github.com/FloatTech/zbputils/control"
 	"github.com/FloatTech/zbputils/ctxext"
@@ -118,7 +119,7 @@ func init() {
 				if len(split) == 2 {
 					ItemName := split[0]
 					ItemNumber := split[1]
-					sendGoods(ctx, ItemName, ItemNumber, "", false)
+					sendGoods(ctx, ItemName, ItemNumber, false)
 				}
 			}
 		})
@@ -133,8 +134,7 @@ func init() {
 				if len(split) == 3 {
 					itemName := split[0]
 					itemNumber := split[1]
-					recUid := split[2]
-					sendGoods(ctx, itemName, itemNumber, recUid, true)
+					sendGoods(ctx, itemName, itemNumber, true)
 				}
 			}
 		})
@@ -243,7 +243,13 @@ type DataRes struct {
 	Data int64 `json:"data"`
 }
 
-func sendGoods(ctx *zero.Ctx, goodsName string, goodsNumber string, recUid string, superUser bool) {
+func sendGoods(ctx *zero.Ctx, goodsName string, goodsNumber string, superUser bool) {
+	has, at := xiaer.GetFirstAt(ctx)
+	if !has || at == 0 {
+		ctx.SendChain(message.Text("您需要选择一个人@并发送"))
+		return
+	}
+
 	// 0. 获取GoodsName是否存在
 	goodsId := getGoodsIdByGoodsName(goodsName)
 	if len(goodsId) == 0 {
@@ -265,6 +271,11 @@ func sendGoods(ctx *zero.Ctx, goodsName string, goodsNumber string, recUid strin
 	}
 
 	if superUser {
+		recUid, err := getUidByQQ(at)
+		if err != nil {
+			ctx.SendChain(message.Text("选择的接收者有误"))
+			return
+		}
 		uid = recUid
 	}
 
