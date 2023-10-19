@@ -131,7 +131,7 @@ func init() {
 			log.Info("收到发送物品消息：", txt)
 			if txt != "" {
 				split := strings.Split(txt, " ")
-				if len(split) == 3 {
+				if len(split) >= 2 {
 					itemName := split[0]
 					itemNumber := split[1]
 					sendGoods(ctx, itemName, itemNumber, true)
