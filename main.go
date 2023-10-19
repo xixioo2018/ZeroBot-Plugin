@@ -197,10 +197,10 @@ import (
 	// -----------------------以下为内置依赖，勿动------------------------ //
 	"github.com/FloatTech/floatbox/process"
 
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/genshin_p"        // 原神私服
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/aiart"      // ai绘画
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/art_of_war" // 纸上谈兵
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/farm"       // 农场
+	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/genshin_p"  // 原神私服
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/pixiv"      // pixiv搜图
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/seller"     // 好友买卖
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/txt2img"    // 文转图三次元
