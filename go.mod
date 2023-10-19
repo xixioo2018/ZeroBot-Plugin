@@ -24,7 +24,7 @@ require (
 	github.com/fumiama/go-base16384 v1.7.0
 	github.com/fumiama/go-registry v0.2.6
 	github.com/fumiama/gotracemoe v0.0.3
-	github.com/fumiama/imgsz v0.0.2 // indirect
+	github.com/fumiama/imgsz v0.0.2
 	github.com/fumiama/jieba v0.0.0-20221203025406-36c17a10b565
 	github.com/fumiama/unibase2n v0.0.0-20221020155353-02876e777430
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
@@ -72,7 +72,6 @@ require (
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/lufia/plan9stats v0.0.0-20211012122336-39d0f177ccd0 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect
-	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
 	github.com/onsi/ginkgo/v2 v2.9.5 // indirect
 	github.com/pbnjay/memory v0.0.0-20210728143218-7b4eea64cf58 // indirect
 	github.com/pkumza/numcn v1.0.0 // indirect
@@ -109,6 +108,7 @@ require (
 
 require (
 	github.com/gomodule/redigo v1.8.8
+	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	go.mongodb.org/mongo-driver v1.9.1
 )
 
