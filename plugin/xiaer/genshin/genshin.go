@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	fcext "github.com/FloatTech/floatbox/ctxext"
 	ctrl "github.com/FloatTech/zbpctrl"
 	"github.com/FloatTech/zbputils/control"
 	"github.com/FloatTech/zbputils/ctxext"
@@ -38,12 +37,14 @@ func initialize(dbpath string) *gorm.DB {
 		// 生成文件
 		f, err := os.Create(dbpath)
 		if err != nil {
+			fmt.Println(err.Error())
 			return nil
 		}
 		defer f.Close()
 	}
 	qdb, err := gorm.Open("sqlite3", dbpath)
 	if err != nil {
+		fmt.Println(err.Error())
 		panic(err)
 	}
 	qdb.AutoMigrate(&Genshin{})
@@ -59,15 +60,14 @@ func init() {
 			"- 物品查询 xxxx\n",
 	})
 
-	fcext.DoOnceOnSuccess(func(ctx *zero.Ctx) bool {
-		path := engine.DataFolder() + "genshin.db"
-		genshinDb = initialize(path)
-		return true
-	})
+	path := engine.DataFolder() + "genshin.db"
+	genshinDb = initialize(path)
 
 	engine.OnPrefix("绑定私服UID").SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
+			fmt.Println("开始绑定私服Uid")
 			suid := ctx.State["args"].(string)
+			fmt.Println("suid: ", suid)
 			int64uid, err := strconv.ParseInt(suid, 10, 64)
 			if suid == "" || int64uid < 100000000 || int64uid > 1000000000 || err != nil {
 				//ctx.SendChain(message.Text("-请输入正确的uid"))
@@ -76,6 +76,7 @@ func init() {
 			exist := Genshin{}
 			first := genshinDb.Model(Genshin{}).Where("qq = ?", ctx.Event.UserID).First(&exist)
 			if first.Error != nil {
+				fmt.Println("查询错误：", first.Error)
 				return
 			}
 			if first.RowsAffected > 0 {
@@ -84,6 +85,7 @@ func init() {
 			} else {
 				genshinDb.Create(&Genshin{QQ: ctx.Event.UserID, Uid: suid})
 			}
+			ctx.SendChain(message.Text("绑定成功"))
 		})
 	engine.OnPrefix("发送物品").SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
