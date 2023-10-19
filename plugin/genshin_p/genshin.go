@@ -66,7 +66,7 @@ func init() {
 	engine := control.Register(id, &ctrl.Options[*zero.Ctx]{
 		DisableOnDefault: false,
 		Help: "genshin私服\n" +
-			"- 绑定私服 xxxx\n" +
+			"- 初始化私服账号 xxxx\n" +
 			"- 发送物品 ID 数量\n" +
 			"- 物品查询 xxxx\n",
 	})
@@ -78,7 +78,7 @@ func init() {
 		fmt.Println("初始化数据库完成")
 	}()
 
-	engine.OnPrefix("绑定私服").SetBlock(true).Limit(ctxext.LimitByGroup).
+	engine.OnPrefix("初始化私服账号").SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
 			fmt.Println("开始绑定私服UID")
 			suid := ctx.State["args"].(string)
