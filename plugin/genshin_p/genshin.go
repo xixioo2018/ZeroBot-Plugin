@@ -3,7 +3,6 @@ package genshin_p
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	ctrl "github.com/FloatTech/zbpctrl"
 	"github.com/FloatTech/zbputils/control"
 	"github.com/FloatTech/zbputils/ctxext"
@@ -38,14 +37,14 @@ func initialize(dbpath string) *gorm.DB {
 		// 生成文件
 		f, err := os.Create(dbpath)
 		if err != nil {
-			fmt.Println(err.Error())
+			log.Info(err.Error())
 			return nil
 		}
 		defer f.Close()
 	}
 	qdb, err := gorm.Open("sqlite3", dbpath)
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Info(err.Error())
 		panic(err)
 	}
 	qdb.AutoMigrate(&Genshin{})
@@ -72,17 +71,17 @@ func init() {
 	})
 	go func() {
 		path := engine.DataFolder() + "genshin.db"
-		fmt.Println("初始化数据库")
+		log.Info("初始化数据库")
 		dbPath = path
 		genshinDb = initialize(path)
-		fmt.Println("初始化数据库完成")
+		log.Info("初始化数据库完成")
 	}()
 
 	engine.OnPrefix("初始化账号").SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
-			fmt.Println("开始绑定私服UID")
+			log.Info("开始绑定账号")
 			suid := ctx.State["args"].(string)
-			fmt.Println("suid: ", suid)
+			log.Info("suid: ", suid)
 			int64uid, err := strconv.ParseInt(suid, 10, 64)
 			if suid == "" || int64uid < 100000000 || int64uid > 1000000000 || err != nil {
 				//ctx.SendChain(message.Text("-请输入正确的uid"))
@@ -91,7 +90,7 @@ func init() {
 			exist := Genshin{}
 			first := getDb().Model(Genshin{}).Where("qq = ?", ctx.Event.UserID).First(&exist)
 			if first.Error != nil {
-				fmt.Println("查询错误：", first.Error)
+				log.Info("查询错误：", first.Error)
 				return
 			}
 			if first.RowsAffected > 0 {
@@ -136,21 +135,21 @@ func login(uid string, password string) string {
 	req, err := http.NewRequest(method, url, payload)
 
 	if err != nil {
-		fmt.Println(err)
+		log.Info(err)
 		return ""
 	}
 	req.Header.Add("Content-Type", "application/json")
 
 	res, err := client.Do(req)
 	if err != nil {
-		fmt.Println(err)
+		log.Info(err)
 		return ""
 	}
 	defer res.Body.Close()
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		fmt.Println(err)
+		log.Info(err)
 		return ""
 	}
 	tokenRes := TokenRes{}
@@ -159,7 +158,6 @@ func login(uid string, password string) string {
 		return ""
 	}
 	return tokenRes.Token
-	//fmt.Println(string(body))
 }
 
 func getUidByQQ(qq int64) (string, error) {
@@ -215,7 +213,7 @@ func sendGoodsByToken(ctx *zero.Ctx, uid string, goodsId string, goodsNumber int
 	}
 	marshal, err2 := json.Marshal(requestBody)
 	if err2 != nil {
-		fmt.Println(err2)
+		log.Info(err2)
 		return
 	}
 	payload := strings.NewReader(string(marshal))
@@ -224,7 +222,7 @@ func sendGoodsByToken(ctx *zero.Ctx, uid string, goodsId string, goodsNumber int
 	req, err := http.NewRequest(method, url, payload)
 
 	if err != nil {
-		fmt.Println(err)
+		log.Info(err)
 		return
 	}
 	req.Header.Add("Authorization", token)
@@ -232,7 +230,7 @@ func sendGoodsByToken(ctx *zero.Ctx, uid string, goodsId string, goodsNumber int
 
 	res, err := client.Do(req)
 	if err != nil {
-		fmt.Println(err)
+		log.Info(err)
 		return
 	}
 	defer res.Body.Close()
@@ -240,10 +238,10 @@ func sendGoodsByToken(ctx *zero.Ctx, uid string, goodsId string, goodsNumber int
 	if res.StatusCode == 200 {
 		body, err := io.ReadAll(res.Body)
 		if err != nil {
-			fmt.Println(err)
+			log.Info(err)
 			return
 		}
-		fmt.Println(string(body))
+		log.Info(string(body))
 		ctx.SendChain(message.Text("发送成功"))
 	} else {
 		ctx.SendChain(message.Text("发送失败"))
