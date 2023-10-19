@@ -1,4 +1,4 @@
-package genshin
+package genshin_p
 
 import (
 	"encoding/json"
