@@ -112,13 +112,29 @@ func init() {
 		Handle(func(ctx *zero.Ctx) {
 			log.Info("收到发送物品消息")
 			txt := ctx.State["args"].(string)
-			log.Info("查询画：", txt)
+			log.Info("收到发送物品消息：", txt)
 			if txt != "" {
 				split := strings.Split(txt, " ")
 				if len(split) == 2 {
 					ItemName := split[0]
 					ItemNumber := split[1]
-					sendGoods(ctx, ItemName, ItemNumber)
+					sendGoods(ctx, ItemName, ItemNumber, "", false)
+				}
+			}
+		})
+
+	engine.OnPrefix("设置物品", zero.SuperUserPermission).SetBlock(true).Limit(ctxext.LimitByGroup).
+		Handle(func(ctx *zero.Ctx) {
+			log.Info("收到发送物品消息")
+			txt := ctx.State["args"].(string)
+			log.Info("收到发送物品消息：", txt)
+			if txt != "" {
+				split := strings.Split(txt, " ")
+				if len(split) == 3 {
+					itemName := split[0]
+					itemNumber := split[1]
+					recUid := split[2]
+					sendGoods(ctx, itemName, itemNumber, recUid, true)
 				}
 			}
 		})
@@ -227,28 +243,44 @@ type DataRes struct {
 	Data int64 `json:"data"`
 }
 
-func sendGoods(ctx *zero.Ctx, goodsName string, goodsNumber string) {
+func sendGoods(ctx *zero.Ctx, goodsName string, goodsNumber string, recUid string, superUser bool) {
 	// 0. 获取GoodsName是否存在
 	goodsId := getGoodsIdByGoodsName(goodsName)
 	if len(goodsId) == 0 {
 		ctx.SendChain(message.Text("物品名不存在: " + goodsName))
+		return
 	}
 
 	// 1. 获取当前用户的UID
 	uid, err := getUidByQQ(ctx.Event.UserID)
 	if err != nil {
 		ctx.SendChain(message.Text(err.Error()))
+		return
 	}
 	// 3. 执行login获取token
 	token := login(uid)
 	if len(token) == 0 {
 		ctx.SendChain(message.Text("登录失败"))
+		return
 	}
+
+	if superUser {
+		uid = recUid
+	}
+
 	// 4. 执行发送物品
-	parseInt, err := strconv.ParseInt(goodsNumber, 64, 10)
+	parseInt, err := strconv.ParseInt(goodsNumber, 10, 64)
 	if err != nil {
 		ctx.SendChain(message.Text("物品数量不正确: " + goodsNumber))
+		return
 	}
+
+	if !superUser {
+		if parseInt > 50 {
+			ctx.SendChain(message.Text("物品数量超上限: " + goodsNumber))
+		}
+	}
+
 	sendGoodsByToken(ctx, uid, goodsId, parseInt, token)
 }
 
