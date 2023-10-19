@@ -109,20 +109,20 @@ func init() {
 			token := login(uid)
 			GetOnlineCount(ctx, token)
 		})
-	engine.OnPrefix("发送物品").SetBlock(true).Limit(ctxext.LimitByGroup).
-		Handle(func(ctx *zero.Ctx) {
-			log.Info("收到发送物品消息")
-			txt := ctx.State["args"].(string)
-			log.Info("收到发送物品消息：", txt)
-			if txt != "" {
-				split := strings.Split(txt, " ")
-				if len(split) == 2 {
-					ItemName := split[0]
-					ItemNumber := split[1]
-					sendGoods(ctx, ItemName, ItemNumber, false)
-				}
-			}
-		})
+	//engine.OnPrefix("发送物品").SetBlock(true).Limit(ctxext.LimitByGroup).
+	//	Handle(func(ctx *zero.Ctx) {
+	//		log.Info("收到发送物品消息")
+	//		txt := ctx.State["args"].(string)
+	//		log.Info("收到发送物品消息：", txt)
+	//		if txt != "" {
+	//			split := strings.Split(txt, " ")
+	//			if len(split) == 2 {
+	//				ItemName := split[0]
+	//				ItemNumber := split[1]
+	//				sendGoods(ctx, ItemName, ItemNumber, false)
+	//			}
+	//		}
+	//	})
 
 	engine.OnPrefix("设置物品", zero.SuperUserPermission).SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
