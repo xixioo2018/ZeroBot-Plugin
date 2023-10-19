@@ -244,12 +244,6 @@ type DataRes struct {
 }
 
 func sendGoods(ctx *zero.Ctx, goodsName string, goodsNumber string, superUser bool) {
-	has, at := xiaer.GetFirstAt(ctx)
-	if !has || at == 0 {
-		ctx.SendChain(message.Text("您需要选择一个人@并发送"))
-		return
-	}
-
 	// 0. 获取GoodsName是否存在
 	goodsId := getGoodsIdByGoodsName(goodsName)
 	if len(goodsId) == 0 {
@@ -271,6 +265,11 @@ func sendGoods(ctx *zero.Ctx, goodsName string, goodsNumber string, superUser bo
 	}
 
 	if superUser {
+		has, at := xiaer.GetFirstAt(ctx)
+		if !has || at == 0 {
+			ctx.SendChain(message.Text("您需要选择一个人@并发送"))
+			return
+		}
 		recUid, err := getUidByQQ(at)
 		if err != nil {
 			ctx.SendChain(message.Text("选择的接收者有误"))
