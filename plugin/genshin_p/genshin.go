@@ -89,11 +89,7 @@ func init() {
 			}
 			exist := Genshin{}
 			first := getDb().Model(Genshin{}).Where("qq = ?", ctx.Event.UserID).First(&exist)
-			if first.Error != nil {
-				log.Info("查询错误：", first.Error)
-				return
-			}
-			if first.RowsAffected > 0 {
+			if first.RowsAffected > 0 || len(exist.Uid) > 0 {
 				// 更新绑定
 				getDb().Model(Genshin{}).Where("qq = ?", ctx.Event.UserID).Update("uid", suid)
 			} else {
