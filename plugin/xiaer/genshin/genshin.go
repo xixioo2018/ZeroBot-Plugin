@@ -28,6 +28,7 @@ type Genshin struct {
 	QQ  int64
 }
 
+var dbPath = ""
 var genshinDb *gorm.DB
 
 // initialize 初始化
@@ -51,21 +52,35 @@ func initialize(dbpath string) *gorm.DB {
 	return qdb
 }
 
+func getDb() *gorm.DB {
+	if len(dbPath) > 0 {
+		if genshinDb == nil {
+			genshinDb = initialize(dbPath)
+		}
+		return genshinDb
+	}
+	return nil
+}
+
 func init() {
 	engine := control.Register(id, &ctrl.Options[*zero.Ctx]{
 		DisableOnDefault: false,
 		Help: "genshin私服\n" +
-			"- 绑定私服UID xxxx\n" +
+			"- 绑定私服 xxxx\n" +
 			"- 发送物品 ID 数量\n" +
 			"- 物品查询 xxxx\n",
 	})
+	go func() {
+		path := engine.DataFolder() + "genshin.db"
+		fmt.Println("初始化数据库")
+		dbPath = path
+		genshinDb = initialize(path)
+		fmt.Println("初始化数据库完成")
+	}()
 
-	path := engine.DataFolder() + "genshin.db"
-	genshinDb = initialize(path)
-
-	engine.OnPrefix("绑定私服UID").SetBlock(true).Limit(ctxext.LimitByGroup).
+	engine.OnPrefix("绑定私服").SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
-			fmt.Println("开始绑定私服Uid")
+			fmt.Println("开始绑定私服UID")
 			suid := ctx.State["args"].(string)
 			fmt.Println("suid: ", suid)
 			int64uid, err := strconv.ParseInt(suid, 10, 64)
@@ -74,16 +89,16 @@ func init() {
 				return
 			}
 			exist := Genshin{}
-			first := genshinDb.Model(Genshin{}).Where("qq = ?", ctx.Event.UserID).First(&exist)
+			first := getDb().Model(Genshin{}).Where("qq = ?", ctx.Event.UserID).First(&exist)
 			if first.Error != nil {
 				fmt.Println("查询错误：", first.Error)
 				return
 			}
 			if first.RowsAffected > 0 {
 				// 更新绑定
-				genshinDb.Model(Genshin{}).Where("qq = ?", ctx.Event.UserID).Update("uid", suid)
+				getDb().Model(Genshin{}).Where("qq = ?", ctx.Event.UserID).Update("uid", suid)
 			} else {
-				genshinDb.Create(&Genshin{QQ: ctx.Event.UserID, Uid: suid})
+				getDb().Create(&Genshin{QQ: ctx.Event.UserID, Uid: suid})
 			}
 			ctx.SendChain(message.Text("绑定成功"))
 		})
@@ -149,7 +164,7 @@ func login(uid string, password string) string {
 
 func getUidByQQ(qq int64) (string, error) {
 	genshin := Genshin{}
-	first := genshinDb.Model(Genshin{}).Where("qq = ?", qq).First(&genshin)
+	first := getDb().Model(Genshin{}).Where("qq = ?", qq).First(&genshin)
 	if first.Error != nil || first.RowsAffected == 0 {
 		return "", errors.New("未绑定UID")
 	}
