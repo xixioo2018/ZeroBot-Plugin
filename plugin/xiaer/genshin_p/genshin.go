@@ -17,6 +17,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 const id = "genshin_privete"
@@ -30,6 +31,7 @@ type Genshin struct {
 
 var dbPath = ""
 var genshinDb *gorm.DB
+var enableAuto = false
 
 // initialize 初始化
 func initialize(dbpath string) *gorm.DB {
@@ -109,20 +111,33 @@ func init() {
 			token := login(uid)
 			GetOnlineCount(ctx, token)
 		})
-	//engine.OnPrefix("发送物品").SetBlock(true).Limit(ctxext.LimitByGroup).
-	//	Handle(func(ctx *zero.Ctx) {
-	//		log.Info("收到发送物品消息")
-	//		txt := ctx.State["args"].(string)
-	//		log.Info("收到发送物品消息：", txt)
-	//		if txt != "" {
-	//			split := strings.Split(txt, " ")
-	//			if len(split) == 2 {
-	//				ItemName := split[0]
-	//				ItemNumber := split[1]
-	//				sendGoods(ctx, ItemName, ItemNumber, false)
-	//			}
-	//		}
-	//	})
+	engine.OnFullMatch("开启自助发送", zero.SuperUserPermission).SetBlock(true).Limit(ctxext.LimitByGroup).
+		Handle(func(ctx *zero.Ctx) {
+			log.Info("开启自助发送，时效为1分钟")
+			go func() {
+				time.Sleep(time.Minute)
+				enableAuto = false
+			}()
+			enableAuto = true
+		})
+	engine.OnPrefix("发送物品").SetBlock(true).Limit(ctxext.LimitByGroup).
+		Handle(func(ctx *zero.Ctx) {
+			if !enableAuto {
+				ctx.SendChain(message.Text("当前暂未开启自助发送"))
+				return
+			}
+			log.Info("收到发送物品消息")
+			txt := ctx.State["args"].(string)
+			log.Info("收到发送物品消息：", txt)
+			if txt != "" {
+				split := strings.Split(txt, " ")
+				if len(split) == 2 {
+					ItemName := split[0]
+					ItemNumber := split[1]
+					sendGoods(ctx, ItemName, ItemNumber, false)
+				}
+			}
+		})
 
 	engine.OnPrefix("设置物品", zero.SuperUserPermission).SetBlock(true).Limit(ctxext.LimitByGroup).
 		Handle(func(ctx *zero.Ctx) {
