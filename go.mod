@@ -109,6 +109,7 @@ require (
 require (
 	github.com/gomodule/redigo v1.8.8
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
+	github.com/sashabaranov/go-openai v1.16.0
 	go.mongodb.org/mongo-driver v1.9.1
 )
 

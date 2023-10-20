@@ -199,6 +199,7 @@ import (
 
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/aiart"      // ai绘画
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/art_of_war" // 纸上谈兵
+	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/chat"       // 文转图三次元
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/farm"       // 农场
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/genshin_p"  // 原神私服
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/xiaer/pixiv"      // pixiv搜图
