@@ -23,9 +23,11 @@ var client *openai.Client
 func init() {
 	engine := control.Register(id, &ctrl.Options[*zero.Ctx]{
 		DisableOnDefault: false,
-		Help: "Ai绘画\n" +
-			"- 画一张[style]的[xx] \n" +
-			"- style: 古风 油画 水彩画 卡通画 二次元 浮世绘 蒸汽波艺术 low poly 像素风格 概念艺术 未来主义 赛博朋克 写实风格 洛丽塔风格 巴洛克风格 超现实主义\n",
+		Help: "个性聊天\n" +
+			"- @Bot 聊天内容 \n" +
+			"- 重新加载聊天配置\n" +
+			"- 设置 聊天地址 address \n" +
+			"- 设置 聊天API apikey\n",
 	})
 
 	engine.OnMessage(zero.OnlyToMe).SetBlock(true).Limit(ctxext.LimitByUser).
@@ -42,6 +44,11 @@ func init() {
 			}
 			ctx.Send(reply)
 		})
+	engine.OnFullMatch("重新加载聊天配置", zero.OnlyPrivate, zero.SuperUserPermission).SetBlock(true).Handle(func(ctx *zero.Ctx) {
+		initChatGptClient()
+
+		ctx.SendChain(message.Text("重启聊天配置成功"))
+	})
 	engine.OnRegex(`^设置\s*聊天API\s*(.*)$`, zero.OnlyPrivate, zero.SuperUserPermission).SetBlock(true).Handle(func(ctx *zero.Ctx) {
 		key = ctx.State["regex_matched"].([]string)[1]
 		log.Info(key)
