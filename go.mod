@@ -96,7 +96,6 @@ require (
 	golang.org/x/exp/shiny v0.0.0-20221126150942-6ab00d035af9 // indirect
 	golang.org/x/mobile v0.0.0-20201217150744-e6ae53a27f4f // indirect
 	golang.org/x/mod v0.10.0 // indirect
-	golang.org/x/net v0.10.0 // indirect
 	golang.org/x/sync v0.2.0 // indirect
 	golang.org/x/tools v0.9.1 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
@@ -111,6 +110,7 @@ require (
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/sashabaranov/go-openai v1.16.0
 	go.mongodb.org/mongo-driver v1.9.1
+	golang.org/x/net v0.10.0
 )
 
 replace modernc.org/sqlite => github.com/fumiama/sqlite3 v1.20.0-with-win386
