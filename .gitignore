@@ -12,3 +12,4 @@ data/
 go.sum
 *.syso
 log
+/.direnv
