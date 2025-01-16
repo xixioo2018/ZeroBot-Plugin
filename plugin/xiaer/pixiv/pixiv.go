@@ -131,7 +131,7 @@ func search(ctx *zero.Ctx, text string) {
 		wg.Wait()
 		close(results)
 
-		segments := make([]message.MessageSegment, 0)
+		segments := make([]message.Segment, 0)
 		for re := range results {
 			if re != nil {
 				segments = append(segments, message.ImageBytes(re))

@@ -249,7 +249,7 @@ func buyField(ctx *zero.Ctx) {
 }
 
 func oneKeyOperation(ctx *zero.Ctx) {
-	segments := make([]message.MessageSegment, 0)
+	segments := make([]message.Segment, 0)
 	// 收菜
 	collect(ctx)
 	// 购买种子
@@ -458,7 +458,7 @@ func buy(ctx *zero.Ctx, name string, number int) bool {
 	return false
 }
 
-func buyCrop(ctx *zero.Ctx, crop Crop, number int) message.MessageSegment {
+func buyCrop(ctx *zero.Ctx, crop Crop, number int) message.Segment {
 	assets := assets(sendUser(ctx))
 	level := level(assets.Exp)
 	stock := stock(sendUser(ctx))
@@ -541,7 +541,7 @@ func plant(ctx *zero.Ctx, name string) bool {
 	return false
 }
 
-func plantCrop(ctx *zero.Ctx, crop Crop) message.MessageSegment {
+func plantCrop(ctx *zero.Ctx, crop Crop) message.Segment {
 	now := now()
 	builder := strings.Builder{}
 	assets := assets(sendUser(ctx))
@@ -891,7 +891,7 @@ func GetFirstAt(ctx *zero.Ctx) (bool, int64) {
 	return false, 0
 }
 
-func water(ctx *zero.Ctx) message.MessageSegment {
+func water(ctx *zero.Ctx) message.Segment {
 	// 加锁
 	lock, err := lockUnit(sendUser(ctx))
 	if err != nil {
