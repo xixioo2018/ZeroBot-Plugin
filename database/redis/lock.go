@@ -67,7 +67,7 @@ return nil;
 var lockScriptRedis = redis.NewScript(1, lockScript)
 var unlockScriptRedis = redis.NewScript(1, unlockScript)
 
-func (lock *Lock) Unlock() (bool, error) {
+func (lock *Lock) Unlock() bool {
 	// connect
 	conn := lock.RdPool.Get()
 	defer conn.Close()
@@ -76,9 +76,12 @@ func (lock *Lock) Unlock() (bool, error) {
 	// already lease when if err == redis.ErrNil
 	// reentry counter > 0 when bool is false
 	if err == nil && bool {
-		conn.Do("PUBLISH", lock.Key, lock.Key)
+		_, err := conn.Do("PUBLISH", lock.Key, lock.Key)
+		if err != nil {
+			return false
+		}
 	}
-	return bool, err
+	return bool
 }
 
 func TryLock(key string, wait time.Duration, lease time.Duration) (*Lock, error) {
@@ -115,7 +118,10 @@ func TryLock(key string, wait time.Duration, lease time.Duration) (*Lock, error)
 			}
 			subConn := redis.PubSubConn{Conn: RdPool.Get()}
 			defer subConn.Close()
-			subConn.Subscribe(key)
+			err2 := subConn.Subscribe(key)
+			if err2 != nil {
+				panic(err2)
+			}
 			for true {
 				switch subConn.ReceiveWithTimeout(waitDuration).(type) {
 				case redis.Message: // message

@@ -2,6 +2,7 @@ package farm
 
 import (
 	"context"
+	log "github.com/sirupsen/logrus"
 	"math"
 	"time"
 
@@ -21,7 +22,10 @@ func stock(groupCode int64, uin int64) Stock {
 	cur, _ := stockCollection.Find(ctx, bson.M{"groupCode": groupCode, "uin": uin})
 	defer cur.Close(ctx)
 	if cur.Next(ctx) {
-		cur.Decode(&stock)
+		err := cur.Decode(&stock)
+		if err != nil {
+			log.Error(err)
+		}
 	} else {
 		stock.GroupCode = groupCode
 		stock.Uin = uin
@@ -41,7 +45,10 @@ func stockUpdate(stock Stock) {
 	user := bson.M{"uin": stock.Uin, "groupCode": stock.GroupCode}
 	update := bson.M{"$set": bson.M{"cropCount": cropCount}}
 	stockCollection := mongo.Collection("game.farm.stock")
-	stockCollection.UpdateOne(ctx, user, update, options.Update().SetUpsert(true))
+	_, err := stockCollection.UpdateOne(ctx, user, update, options.Update().SetUpsert(true))
+	if err != nil {
+		log.Error(err)
+	}
 }
 
 type Stock struct {
@@ -60,7 +67,10 @@ func assets(groupCode int64, uin int64) Assets {
 	cur, _ := assetsCollection.Find(ctx, bson.M{"groupCode": groupCode, "uin": uin})
 	defer cur.Close(ctx)
 	if cur.Next(ctx) {
-		cur.Decode(&assets)
+		err := cur.Decode(&assets)
+		if err != nil {
+			log.Error(err)
+		}
 	} else {
 		assets.GroupCode = groupCode
 		assets.Uin = uin
@@ -93,7 +103,10 @@ func assetsGroup(groupCode int64) []Assets {
 	defer cur.Close(ctx)
 	for cur.Next(ctx) {
 		var asset Assets
-		cur.Decode(&asset)
+		err := cur.Decode(&asset)
+		if err != nil {
+			log.Error(err)
+		}
 		groupAssets = append(groupAssets, asset)
 	}
 	return groupAssets
@@ -103,21 +116,30 @@ func assetsCoinsInc(code int64, uin int64, inc int64) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	assetsCollection := mongo.Collection("game.farm.assets")
-	assetsCollection.UpdateOne(ctx, bson.M{"uin": uin, "groupCode": code}, bson.M{"$inc": bson.M{"coins": inc}})
+	_, err := assetsCollection.UpdateOne(ctx, bson.M{"uin": uin, "groupCode": code}, bson.M{"$inc": bson.M{"coins": inc}})
+	if err != nil {
+		log.Error(err)
+	}
 }
 
 func assetsFieldInc(code int64, uin int64, inc int) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	assetsCollection := mongo.Collection("game.farm.assets")
-	assetsCollection.UpdateOne(ctx, bson.M{"uin": uin, "groupCode": code}, bson.M{"$inc": bson.M{"fields": inc}})
+	_, err := assetsCollection.UpdateOne(ctx, bson.M{"uin": uin, "groupCode": code}, bson.M{"$inc": bson.M{"fields": inc}})
+	if err != nil {
+		log.Error(err)
+	}
 }
 
 func assetsExpInc(code int64, uin int64, up int64) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	assetsCollection := mongo.Collection("game.farm.assets")
-	assetsCollection.UpdateOne(ctx, bson.M{"uin": uin, "groupCode": code}, bson.M{"$inc": bson.M{"exp": up}})
+	_, err := assetsCollection.UpdateOne(ctx, bson.M{"uin": uin, "groupCode": code}, bson.M{"$inc": bson.M{"exp": up}})
+	if err != nil {
+		log.Error(err)
+	}
 }
 
 type Assets struct {
@@ -139,7 +161,10 @@ func land(groupCode int64, uin int64) Land {
 	cur, _ := landCollection.Find(ctx, bson.M{"groupCode": groupCode, "uin": uin})
 	defer cur.Close(ctx)
 	if cur.Next(ctx) {
-		cur.Decode(&land)
+		err := cur.Decode(&land)
+		if err != nil {
+			log.Error(err)
+		}
 	} else {
 		land.GroupCode = groupCode
 		land.Uin = uin
@@ -169,7 +194,10 @@ func landUpdate(land Land) {
 	user := bson.M{"groupCode": land.GroupCode, "uin": land.Uin}
 	update := bson.M{"$set": bson.M{"fields": fields}}
 	landCollection := mongo.Collection("game.farm.land")
-	landCollection.UpdateOne(ctx, user, update, options.Update().SetUpsert(true))
+	_, err := landCollection.UpdateOne(ctx, user, update, options.Update().SetUpsert(true))
+	if err != nil {
+		log.Error(err)
+	}
 }
 
 type Field struct {
@@ -196,7 +224,10 @@ func pets(groupCode int64, uin int64) Pets {
 	cur, _ := landCollection.Find(ctx, bson.M{"groupCode": groupCode, "uin": uin})
 	defer cur.Close(ctx)
 	if cur.Next(ctx) {
-		cur.Decode(&pets)
+		err := cur.Decode(&pets)
+		if err != nil {
+			log.Error(err)
+		}
 	} else {
 		pets.GroupCode = groupCode
 		pets.Uin = uin
@@ -216,7 +247,10 @@ func arms(groupCode int64, uin int64) Arms {
 	cur, _ := landCollection.Find(ctx, bson.M{"groupCode": groupCode, "uin": uin})
 	defer cur.Close(ctx)
 	if cur.Next(ctx) {
-		cur.Decode(&arms)
+		err := cur.Decode(&arms)
+		if err != nil {
+			log.Error(err)
+		}
 	} else {
 		arms.GroupCode = groupCode
 		arms.Uin = uin
@@ -232,7 +266,10 @@ func petsUpdate(pets Pets) {
 	user := bson.M{"groupCode": pets.GroupCode, "uin": pets.Uin}
 	update := bson.M{"$set": bson.M{"pets": pets.Pets}}
 	landCollection := mongo.Collection("game.farm.pets")
-	landCollection.UpdateOne(ctx, user, update, options.Update().SetUpsert(true))
+	_, err := landCollection.UpdateOne(ctx, user, update, options.Update().SetUpsert(true))
+	if err != nil {
+		log.Error(err)
+	}
 }
 
 func armsUpdate(arms Arms) {
@@ -241,7 +278,10 @@ func armsUpdate(arms Arms) {
 	user := bson.M{"groupCode": arms.GroupCode, "uin": arms.Uin}
 	update := bson.M{"$set": bson.M{"arms": arms.Arms}}
 	landCollection := mongo.Collection("game.farm.arms")
-	landCollection.UpdateOne(ctx, user, update, options.Update().SetUpsert(true))
+	_, err := landCollection.UpdateOne(ctx, user, update, options.Update().SetUpsert(true))
+	if err != nil {
+		log.Error(err)
+	}
 }
 
 type Pets struct {

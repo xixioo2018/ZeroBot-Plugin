@@ -56,7 +56,8 @@ func Test() {
 func DelKey(key string) {
 	conn := RdPool.Get()
 	defer conn.Close()
-	conn.Do("DEL", key)
+	_, err := conn.Do("DEL", key)
+	utils.PanicNotNil(err)
 }
 
 func SetString(key string, value string, duration time.Duration) bool {

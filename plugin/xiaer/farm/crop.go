@@ -10,7 +10,10 @@ var (
 )
 
 func init() {
-	json.Unmarshal([]byte(cropJson), &cropList)
+	err := json.Unmarshal([]byte(cropJson), &cropList)
+	if err != nil {
+		panic(err)
+	}
 	for index := 0; index < len(cropList); index++ {
 		crop := cropList[index]
 		cropMap[crop.Level] = crop
