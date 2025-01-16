@@ -150,10 +150,11 @@ func init() { // 插件主体
 		PrivateDataFolder: "gif",
 	}).ApplySingle(ctxext.DefaultSingle)
 	datapath = file.BOTPATH + "/" + en.DataFolder()
-	en.OnRegex(`^(` + strings.Join(cmd, "|") + `)[\s\S]*?(\[CQ:(image\,file=([0-9a-zA-Z]{32}).*|at.+?(\d{5,11}))\].*|(\d+))$`).
+	en.OnRegex(`^(` + strings.Join(cmd, "|") + `)[\s\S]*?(\[CQ:(image\,file=([0-9a-zA-Z]{32}).*|at.+?qq=(\d{5,11})).*\].*|(\d+))$`).
 		SetBlock(true).Handle(func(ctx *zero.Ctx) {
-		c := newContext(ctx.Event.UserID)
 		list := ctx.State["regex_matched"].([]string)
+		atUserID, _ := strconv.ParseInt(list[4]+list[5]+list[6], 10, 64)
+		c := newContext(ctx.Event.UserID, atUserID)
 		err := c.prepareLogos(list[4]+list[5]+list[6], strconv.FormatInt(ctx.Event.UserID, 10))
 		if err != nil {
 			ctx.SendChain(message.Text("ERROR: ", err))

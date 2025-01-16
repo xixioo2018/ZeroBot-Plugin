@@ -32,7 +32,7 @@ var (
 	cfg config
 	// 插件主体
 	engine = control.AutoRegister(&ctrl.Options[*zero.Ctx]{
-		DisableOnDefault: false,
+		DisableOnDefault: true,
 		Brief:            "猜歌插件",
 		Help: "------bot主人指令------\n" +
 			"- 设置猜歌歌库路径 [绝对路径]\n" +
@@ -535,7 +535,7 @@ func getFileURLbyFileName(ctx *zero.Ctx, fileName string) (fileSearchName, fileU
 		for _, fileNameOflist := range files {
 			if strings.Contains(fileNameOflist.Get("file_name").String(), fileName) {
 				fileSearchName = fileNameOflist.Get("file_name").String()
-				fileURL = ctx.GetThisGroupFileUrl(fileNameOflist.Get("busid").Int(), fileNameOflist.Get("file_id").String())
+				fileURL = ctx.GetThisGroupFileURL(fileNameOflist.Get("busid").Int(), fileNameOflist.Get("file_id").String())
 				return
 			}
 		}
@@ -561,7 +561,7 @@ func getFileURLbyfolderID(ctx *zero.Ctx, fileName, folderid string) (fileSearchN
 		for _, fileNameOflist := range files {
 			if strings.Contains(fileNameOflist.Get("file_name").String(), fileName) {
 				fileSearchName = fileNameOflist.Get("file_name").String()
-				fileURL = ctx.GetThisGroupFileUrl(fileNameOflist.Get("busid").Int(), fileNameOflist.Get("file_id").String())
+				fileURL = ctx.GetThisGroupFileURL(fileNameOflist.Get("busid").Int(), fileNameOflist.Get("file_id").String())
 				return
 			}
 		}

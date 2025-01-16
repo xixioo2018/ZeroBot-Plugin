@@ -13,3 +13,4 @@ go.sum
 *.syso
 log
 /.direnv
+/result

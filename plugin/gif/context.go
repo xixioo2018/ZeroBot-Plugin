@@ -20,7 +20,7 @@ func dlchan(name string, s *string, wg *sync.WaitGroup, exit func(error)) {
 	defer wg.Done()
 	target := datapath + `materials/` + name
 	if file.IsNotExist(target) {
-		data, err := web.RequestDataWith(web.NewTLS12Client(), `https://gitcode.net/m0_60838134/imagematerials/-/raw/main/`+name, "GET", "gitcode.net", web.RandUA(), nil)
+		data, err := web.GetData(`https://gitea.seku.su/fumiama/ImageMaterials/raw/branch/main/` + name)
 		if err != nil {
 			_ = os.Remove(target)
 			exit(err)
@@ -48,7 +48,7 @@ func dlchan(name string, s *string, wg *sync.WaitGroup, exit func(error)) {
 func dlblock(name string) (string, error) {
 	target := datapath + `materials/` + name
 	if file.IsNotExist(target) {
-		data, err := web.RequestDataWith(web.NewTLS12Client(), `https://gitcode.net/m0_60838134/imagematerials/-/raw/main/`+name, "GET", "gitcode.net", web.RandUA(), nil)
+		data, err := web.GetData(`https://gitea.seku.su/fumiama/ImageMaterials/raw/branch/main/` + name)
 		if err != nil {
 			_ = os.Remove(target)
 			return "", err
@@ -87,13 +87,13 @@ func dlrange(prefix string, end int, wg *sync.WaitGroup, exit func(error)) []str
 }
 
 // 新的上下文
-func newContext(user int64) *context {
+func newContext(user int64, atUser int64) *context {
 	c := new(context)
-	c.usrdir = datapath + "users/" + strconv.FormatInt(user, 10) + `/`
+	c.usrdir = datapath + "users/" + strconv.FormatInt(atUser, 10) + `/`
 	_ = os.MkdirAll(c.usrdir, 0755)
 	c.headimgsdir = make([]string, 2)
-	c.headimgsdir[0] = c.usrdir + "0.gif"
-	c.headimgsdir[1] = c.usrdir + "1.gif"
+	c.headimgsdir[0] = datapath + "users/" + strconv.FormatInt(atUser, 10) + ".gif"
+	c.headimgsdir[1] = datapath + "users/" + strconv.FormatInt(user, 10) + ".gif"
 	return c
 }
 
